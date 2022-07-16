@@ -2,7 +2,8 @@
 #'
 #' @param type Character. Select start, end or sketch
 #' @param df data.frame. Needed for sketch only
-#' @export
+#' @param align alinhar estrutura.
+#'
 js_op_aux <- function(type, df = NULL, align) {
   if (type == "start") {
     aux <- "function(tfoot, data, start, end, display ) {var api = this.api(), data;"
@@ -15,8 +16,8 @@ js_op_aux <- function(type, df = NULL, align) {
       aux <- htmltools::withTags(div(
         align = align,
         htmltools::tags$table(
-          tableHeader(names(df)),
-          tableFooter(rep("", ncol(df)))
+          DT::tableHeader(names(df)),
+          DT::tableFooter(rep("", ncol(df)))
         )
       ))
     } else {

@@ -25,15 +25,15 @@
 #' @importFrom shiny NS tagList
 mod_create_table_ui <- function(id, nome) {
   ns <- NS(id)
-  box(
+  shinydashboardPlus::box(
     title = strong(nome),
     id = ns("tabelaPadraoBox"),
     collapsible = TRUE,
     collapsed = T,
     closable = F,
-    withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
+    shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
     width = 12,
-    dropdownMenu = boxDropdown(boxDropdownItem(
+    dropdownMenu = shinydashboardPlus::boxDropdown(shinydashboardPlus::boxDropdownItem(
       downloadButton(ns("tabelaPadraoDownload"), "Download"),
       id = ns("tabelaPadraoDownload2")
     ))
@@ -43,8 +43,7 @@ mod_create_table_ui <- function(id, nome) {
 #'
 #' @noRd
 mod_create_table_server <- function(id, group, value1, value2, table1, table2, filtro, fixed = 1,
-                                    widths = c("400px","200px","200px"), align = "left",
-                                    pageLength = 10, scrollY = T, footer = T) {
+                                    widths = c("400px","200px","200px"), align = "left", scrollY = "600px", footer = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
     id,
@@ -66,7 +65,7 @@ mod_create_table_server <- function(id, group, value1, value2, table1, table2, f
       output$tabelaPadrao <- DT::renderDT({
         createDT(
           preTable()$tabela, group, fixed,
-          widths, align, pageLength, scrollY, footer
+          widths, align, nrow(preTable()$tabela), scrollY, footer
         )
 
       })
@@ -78,7 +77,7 @@ mod_create_table_server <- function(id, group, value1, value2, table1, table2, f
         content = function(file) {
           dados = preTable()$tabela
           dados[is.na(dados)] = 0
-          write.xlsx(dados, file, row.names = F)
+          openxlsx::write.xlsx(dados, file, row.names = F)
         }
       )
 

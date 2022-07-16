@@ -4,19 +4,9 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(
-  onStart = NULL,
-  options = list(),
-  enableBookmarking = NULL,
-  uiPattern = "/",
-  ...
-)
+run_app(options = list(), enableBookmarking = NULL, uiPattern = "/", ...)
 }
 \arguments{
-\item{onStart}{A function that will be called before the app is actually run.
-This is only needed for \code{shinyAppObj}, since in the \code{shinyAppDir}
-case, a \code{global.R} file can be used for this purpose.}
-
 \item{options}{Named options that should be passed to the \code{runApp} call
 (these can be any of the following: "port", "launch.browser", "host", "quiet",
 "display.mode" and "test.mode"). You can also specify \code{width} and
@@ -33,7 +23,7 @@ request to determine whether the \code{ui} should be used to handle the
 request. Note that the entire request path must match the regular
 expression in order for the match to be considered successful.}
 
-\item{...}{arguments to pass to golem_opts. 
+\item{...}{arguments to pass to golem_opts.
 See `?golem::get_golem_options` for more details.}
 }
 \description{

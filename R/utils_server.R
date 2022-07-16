@@ -8,7 +8,7 @@
 updateXXXInput <- function(a, tipo, session, defaultValues, input) {
   if (tipo == "picker") {
     if (comparacao1(a, defaultValues, input)) {
-      updatePickerInput(session, a, selected = defaultValues[[a]])
+      shinyWidgets::updatePickerInput(session, a, selected = defaultValues[[a]])
     }
   } else if (tipo == "slider") {
     if (comparacao1(a, defaultValues, input)) {
@@ -16,7 +16,7 @@ updateXXXInput <- function(a, tipo, session, defaultValues, input) {
     }
   } else if (tipo == "checkBox") {
     if (comparacao1(a, defaultValues, input)) {
-      updateCheckboxGroupButtons(session, a, selected = defaultValues[[a]])
+      shinyWidgets::updateCheckboxGroupButtons(session, a, selected = defaultValues[[a]])
     }
   } else if (tipo == "dateRange") {
     if (comparacao1(a, defaultValues, input)) {

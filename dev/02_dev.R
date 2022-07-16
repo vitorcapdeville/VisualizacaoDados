@@ -35,9 +35,10 @@ golem::add_utils("dt_footer", with_test = TRUE)
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
-# golem::add_js_file("script")
+golem::add_js_file("")
 # golem::add_js_handler("handlers")
-# golem::add_css_file("custom")
+golem::add_css_file("bootstrap")
+golem::add_css_file("customizacoesAnaliseSinistros")
 # golem::add_sass_file("custom")
 
 ## Add internal datasets ----
@@ -78,23 +79,23 @@ usethis::use_github_action_check_full()
 # Add action for PR
 usethis::use_github_action_pr_commands()
 
-# Travis CI
-usethis::use_travis()
-usethis::use_travis_badge()
-
-# AppVeyor
-usethis::use_appveyor()
-usethis::use_appveyor_badge()
-
-# Circle CI
-usethis::use_circleci()
-usethis::use_circleci_badge()
-
-# Jenkins
-usethis::use_jenkins()
-
-# GitLab CI
-usethis::use_gitlab_ci()
+# # Travis CI
+# usethis::use_travis()
+# usethis::use_travis_badge()
+#
+# # AppVeyor
+# usethis::use_appveyor()
+# usethis::use_appveyor_badge()
+#
+# # Circle CI
+# usethis::use_circleci()
+# usethis::use_circleci_badge()
+#
+# # Jenkins
+# usethis::use_jenkins()
+#
+# # GitLab CI
+# usethis::use_gitlab_ci()
 
 # You're now set! ----
 # go to dev/03_deploy.R

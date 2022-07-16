@@ -11,7 +11,7 @@
 mod_saved_choices_ui <- function(id, colunasExp, colunasExpNome, ncols,estruturaPadrao, defaultValues, tipo, step = 1){
   ns <- NS(id)
   tagList(
-    filtrosEstrutura(map(colunasExp, ns), colunasExpNome, ncols, estruturaPadrao, defaultValues, tipo, step = 1),
+    filtrosEstrutura(purrr::map(colunasExp, ns), colunasExpNome, ncols, estruturaPadrao, defaultValues, tipo, step = 1),
     hr(),
     tagList(
       tags$div(
@@ -33,37 +33,37 @@ mod_saved_choices_server <- function(id, savedChoices,colunasExp, defaultValues,
     id,
     function(input, output, session) {
 
-      # Renderizar botão de reset (apenas se houver alguma modificação)
+      # Renderizar botão de reset (apenas se houver alguma modificacao)
       output$reset_button <- renderUI({
         ns <- session$ns
-        if (any(unlist(map(colunasExp,comparacao1, defaultValues, input)))) {
+        if (any(unlist(purrr::map(colunasExp,comparacao1, defaultValues, input)))) {
           actionButton(
             inputId = ns('reset'),
-            label = 'Resetar seleção'
+            label = 'Resetar sele\u00E7\u00E3o'
           )
         }
       })
 
-      # Efeito do botão reset
+      # Efeito do botao reset
       observeEvent(input$reset, {
-        walk2(colunasExp, tipo, updateXXXInput, session, defaultValues, input)
+        purrr::walk2(colunasExp, tipo, updateXXXInput, session, defaultValues, input)
       })
 
-      # Renderizar botão de salvar, azul se houver alteração, branco caso contrário.
+      # Renderizar botao de salvar, azul se houver alteracao, branco caso contrario.
       output$save_button <- renderUI({
         ns <- session$ns
-        status <- ifelse(all(unlist(map(colunasExp,comparacao2, input, savedChoices))),
+        status <- ifelse(all(unlist(purrr::map(colunasExp,comparacao2, input, savedChoices))),
                          'light', 'primary')
         actionButton(
           inputId = ns('save'),
-          label = 'Salvar seleção',
+          label = 'Salvar sele\u00E7\u00E3o',
           class = paste0('btn btn-', status)
         )
       })
 
-      # Efeito do botão salvar
+      # Efeito do botao salvar
       observeEvent(input$save, {
-        walk(colunasExp, saveInput, input, savedChoices)
+        purrr::walk(colunasExp, saveInput, input, savedChoices)
       })
 
       return(savedChoices)

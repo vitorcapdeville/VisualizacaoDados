@@ -8,15 +8,18 @@
 criacao_filtro <- function(a, tipo, savedChoices) {
   if (!identical(savedChoices[[a]], defaultValues[[a]])) {
     if (tipo == "dateRange") {
-      aux <- data.frame(savedChoices[[a]] %>% ymd() %>% as.numeric())
+      aux <- data.frame(savedChoices[[a]] %>% lubridate::ymd() %>% as.numeric())
       names(aux) <- a
     } else {
       aux <- data.frame(savedChoices[[a]])
       names(aux) <- a
     }
-    assign(a, aux %>%
-      left_join(dbGetQuery(con, glue::glue("select * from {a}Id"))) %>%
-      pull(Id))
+    assign(
+      a,
+      aux %>%
+        dplyr::left_join(DBI::dbGetQuery(con, glue::glue("select * from {a}Id"))) %>%
+        dplyr::pull(Id)
+    )
     if (tipo %in% c("slider", "dateRange")) {
       filtro <- glue::glue("{a} >= {get(a)[1]} and {a} <= {get(a)[2]}")
     } else {

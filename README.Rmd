@@ -47,11 +47,7 @@ library(VisualizacaoDados)
 
     -   Incluir quantidade dinâmica de faixas
 
--   Estrutura de saved choices
-
 -   Estrutura de agravo
-
--   ~~Criação das tabelas a partir do filtro escolhido (server e output apenas)~~
 
 ### Correções
 
@@ -62,6 +58,10 @@ library(VisualizacaoDados)
 -   Testar se o filtro baseado em uma das tabelas da certo no full join quando tem entrada em uma das tabelas e nao tem na outra. Exemplo: t1 full join t2. Tem valor na t2, mas nao tem na t1. Eu coloco o filtro em t1. O que acontece?
 
 -   Testar se é mais rapido fazer 2 queries, uma em cada base, e juntar os resultados ou fazer uma query só.
+
+-   Formatar as tabelas.
+
+-   Deixar as queries mais rápidas.
 
 ## Code of Conduct
 

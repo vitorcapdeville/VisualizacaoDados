@@ -10,18 +10,18 @@ estruturaPadrao <- function(id, nome, tipo, defaultValues, colWid, step = 1) {
 }
 
 filtrosEstrutura <- function(id, nome, ncols, estruturaPadrao, defaultValues, tipo, step = 1) {
-  if (12 %% ncols != 0) stop("O resto da divisão entre 12 e ncols deve ser zero.")
+  if (12 %% ncols != 0) stop("O resto da divis\u00E3o entre 12 e ncols deve ser zero.")
   c <- 1
   estrutura <- tagList()
   linha <- fluidRow()
   colWid <- 12 / ncols
-  colunas <- pmap(list(id, nome, tipo), estruturaPadrao, defaultValues, colWid, step = 1)
+  colunas <- purrr::pmap(list(id, nome, tipo), estruturaPadrao, defaultValues, colWid, step = 1)
   for (i in 1:length(colunas)) {
     # Varre o total de colunas, e se tiver dentro do limite por linhas, adiciona na linha
     if (c <= ncols) {
       linha <- tagAppendChild(linha, colunas[[i]])
       c <- c + 1
-      # Se estourar o limite, passa pra uma nova linha e recomeça a contagem
+      # Se estourar o limite, passa pra uma nova linha e recomeca a contagem
     } else {
       estrutura <- tagAppendChild(estrutura, linha)
       # Se eu nao adicionar a coluna aqui, eu perco a iteração i
@@ -29,20 +29,20 @@ filtrosEstrutura <- function(id, nome, ncols, estruturaPadrao, defaultValues, ti
       c <- 1
     }
   }
-  # Se terminar dentr do limite, então a última linha não foi adicionada
+  # Se terminar dentr do limite, entao a ultima linha nao foi adicionada
   if (c <= ncols) estrutura <- tagAppendChild(estrutura, linha)
   return(estrutura)
 }
 
 genericInput <- function(id, label, tipo, defaultValues, step) {
   stopifnot(tipo %in% c("picker", "slider", "checkBox", "dateRange"))
-  id2 <- substr(id, str_locate(id, "-")[1, 1] + 1, str_length(id))
+  id2 <- substr(id, stringr::str_locate(id, "-")[1, 1] + 1, stringr::str_length(id))
   choices <- defaultValues[[id2]]
 
   if (tipo == "picker") {
     res <- tags$div(
       align = "center",
-      pickerInput(
+      shinyWidgets::pickerInput(
         inputId = id,
         label = label,
         choices = choices,
@@ -74,7 +74,7 @@ genericInput <- function(id, label, tipo, defaultValues, step) {
   } else if (tipo == "checkBox") {
     res <- tags$div(
       align = "center",
-      checkboxGroupButtons(
+      shinyWidgets::checkboxGroupButtons(
         inputId = id,
         label = label,
         choices = choices,
@@ -104,7 +104,7 @@ genericInput <- function(id, label, tipo, defaultValues, step) {
         start = choices[1],
         end = choices[2],
         language = "pt-BR",
-        separator = " até ",
+        separator = " at\u00E9 ",
         startview = "year"
       )
     )

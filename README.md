@@ -39,12 +39,7 @@ library(VisualizacaoDados)
 
     -   Incluir quantidade dinâmica de faixas
 
--   Estrutura de saved choices
-
 -   Estrutura de agravo
-
--   ~~Criação das tabelas a partir do filtro escolhido (server e output
-    apenas)~~
 
 ### Correções
 
@@ -61,6 +56,10 @@ library(VisualizacaoDados)
 
 -   Testar se é mais rapido fazer 2 queries, uma em cada base, e juntar
     os resultados ou fazer uma query só.
+
+-   Formatar as tabelas.
+
+-   Deixar as queries mais rápidas.
 
 ## Code of Conduct
 
