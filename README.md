@@ -7,6 +7,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test
+coverage](https://codecov.io/gh/vitorcapdeville/VisualizacaoDados/branch/master/graph/badge.svg)](https://app.codecov.io/gh/vitorcapdeville/VisualizacaoDados?branch=master)
 <!-- badges: end -->
 
 Ferramenta para visualização de dados no formato de tabelas, com
