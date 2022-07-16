@@ -1,0 +1,13 @@
+Package: VisualizacaoDados
+Title: Funções para modularizar e organizar a visualização de dados via Shiny
+Version: 0.0.0.9000
+Authors@R: person('Vitor', 'Capdeville', email = 'vgcapdeville@hotmail.com', role = c('cre', 'aut'))
+Description: Esse pacote fornece uma série de funções que criam um esqueleto robusto e escalável para construir visulizações de dados via Shiny.
+License: MIT + file LICENSE
+Imports: 
+    config (>= 0.3.1),
+    golem (>= 0.3.3),
+    shiny (>= 1.7.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
