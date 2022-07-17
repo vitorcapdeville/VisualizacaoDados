@@ -45,7 +45,7 @@ mod_create_table_ui <- function(id, nome) {
 #' create_table Server Functions
 #'
 #' @noRd
-mod_create_table_server <- function(id, group, value1, value2, formats1, formats2, table1, table2, filtro, fixed = 1,
+mod_create_table_server <- function(id, group, con, value1, value2, formats1, formats2, table1, table2, filtro, fixed = 1,
                                     widths = c("400px","200px","200px"), align = "left", scrollY = "600px", footer = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
@@ -60,7 +60,8 @@ mod_create_table_server <- function(id, group, value1, value2, formats1, formats
           value2,
           table1,
           table2,
-          filtro()$filtro
+          filtro()$filtro,
+          con
         )
         list(tabela = tabela)
       })

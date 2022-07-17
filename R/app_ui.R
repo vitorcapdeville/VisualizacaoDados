@@ -5,6 +5,16 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+  con <- get_golem_config("con")
+
+  colunasFiltro <- get_golem_config("colunasFiltro")
+  colunasFiltroNome <- get_golem_config("colunasFiltroNome")
+  colunasFiltroTipo <- get_golem_config("colunasFiltroTipo")
+  colunasTabela <- get_golem_config("colunasTabela")
+  colunasTabelaNome <- get_golem_config("colunasTabelaNome")
+
+  defaultValues <- get_default_values(con = con, colunasFiltro = colunasFiltro, colunasFiltroTipo = colunasFiltroTipo)
+
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
@@ -47,9 +57,9 @@ app_ui <- function(request) {
               collapsed = F,
               closable = F,
               width = 12,
-              mod_saved_choices_ui("filtros", colunasExp, colunasExpNome, 3, estruturaPadrao, defaultValues, colunasExpTipo, 1)
+              mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 3, estruturaPadrao, defaultValues, colunasFiltroTipo, 1)
             ),
-            mod_create_table_ui("NomeProduto", "Produto")
+            purrr::map2(colunasTabela, colunasTabelaNome, mod_create_table_ui)
           )
         )
       ),

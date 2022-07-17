@@ -54,17 +54,24 @@ library(VisualizacaoDados)
     t1 full join t2. Tem valor na t2, mas nao tem na t1. Eu coloco o
     filtro em t1. O que acontece?
 
--   Testar se é mais rapido fazer 2 queries, uma em cada base, e juntar
-    os resultados ou fazer uma query só.
-
--   Formatar as tabelas.
+-   Verificar se é mais eficiente juntar as duas tabelas em uma tabela
+    só, ou deixar duas tabelas separadas. A ideia de duas tabelas
+    separadas é que uma delas geralmente é muito menor, entao em tese
+    juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
+    varias linhas da segunda tabela.
 
 -   Deixar as queries mais rápidas.
 
--   Usar app_config e config file para setar a conexao e as variaveis
-    que definem quais filtros e tabelas serao criados.
+-   Incluir dados de exemplo, usar pinguins.
 
--   Talvez separar os filtros das tabelas.
+-   Incluir a documentação e reescrever as funções de forma mais
+    intuitiva.
+
+-   Verificar a possibilidade de sobrescrever as opções definidas em
+    “golem-config.yml” usando os parametros do run_app().
+
+-   Verficar uma forma de fazer uma UI legal sem usar shinydashboardPlus
+    (talvez sem o proprio shinydashboard tb.)
 
 ## Code of Conduct
 

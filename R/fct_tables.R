@@ -16,7 +16,7 @@ sketch <- function(dados, cols, align = "left") {
   )))
 }
 
-getSQLTable <- function(group, value1, value2, table1, table2, filtro) {
+getSQLTable <- function(group, value1, value2, table1, table2, filtro, con) {
   aux11 <- aux12 <- aux2 <- aux3 <- c()
   for (i in value1) {
     aux11 <- c(aux11, glue::glue("sum({i}) as {i}"))
@@ -64,6 +64,7 @@ createDT <- function(data, colsFixed, fixed = 1, cols, formats,
                      widths = c("400px", "200px", "200px"),
                      align = "left",
                      pageLength = nrow(data), scrollY = T, footer = T) {
+  . <- NULL #Avoid R CMD Check notes
   data <- as.data.frame(data)
 
   if (nrow(data) > pageLength) {
@@ -74,7 +75,6 @@ createDT <- function(data, colsFixed, fixed = 1, cols, formats,
 
   soma1 <- which(names(data) %in% cols[formats == "number"]) - 1
   traco <- which(names(data) %in% cols[formats == "perc"]) - 1
-  browser()
   total <- seq(fixed) - 1
 
   if (footer) {

@@ -23,8 +23,6 @@ Imports:
     magrittr,
     openxlsx,
     purrr,
-    rlang,
-    RSQLite,
     shiny (>= 1.7.1),
     shinycssloaders,
     shinydashboard,
@@ -32,9 +30,9 @@ Imports:
     shinyjs,
     shinyWidgets,
     stats,
-    stringr,
-    tidyselect
+    stringr
 Suggests: 
+    RSQLite,
     spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

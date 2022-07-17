@@ -5,7 +5,8 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-criacao_filtro <- function(a, tipo, savedChoices) {
+criacao_filtro <- function(a, tipo, savedChoices, defaultValues, con) {
+  Id <- NULL #Avoid R CMD CHECK notes
   if (!identical(savedChoices[[a]], defaultValues[[a]])) {
     if (tipo == "dateRange") {
       aux <- data.frame(savedChoices[[a]] %>% lubridate::ymd() %>% as.numeric())
