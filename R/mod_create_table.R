@@ -45,7 +45,7 @@ mod_create_table_ui <- function(id, nome) {
 #' create_table Server Functions
 #'
 #' @noRd
-mod_create_table_server <- function(id, group, con, value1, value2, formats1, formats2, table1, table2, filtro, fixed = 1,
+mod_create_table_server <- function(id, group, con, value1, value2, name1, name2, formats1, formats2, table1, table2, filtro, fixed = 1,
                                     widths = c("400px","200px","200px"), align = "left", scrollY = "600px", footer = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
@@ -54,24 +54,25 @@ mod_create_table_server <- function(id, group, con, value1, value2, formats1, fo
 
       preTable <- reactive({
         req(!input$tabelaPadraoBox$collapsed)
-        tabela = getSQLTable(
-          group,
-          value1,
-          value2,
-          table1,
-          table2,
-          filtro()$filtro,
-          con
+        tabela = query_padrao(
+          con = con,
+          group = group,
+          value1 = value1,
+          value2 = value2,
+          name1 = name1,
+          name2 = name2,
+          table1 = table1,
+          table2 = table2,
+          filtro = filtro()$filtro
         )
         list(tabela = tabela)
       })
 
       output$tabelaPadrao <- DT::renderDT({
         createDT(
-          preTable()$tabela, group, fixed, c(value1, value2), c(formats1, formats2),
+          preTable()$tabela, group, fixed, c(name1, name2), c(formats1, formats2),
           widths, align, nrow(preTable()$tabela), scrollY, footer
         )
-
       })
 
       output$tabelaPadraoDownload <- downloadHandler(

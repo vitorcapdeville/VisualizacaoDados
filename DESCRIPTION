@@ -29,12 +29,10 @@ Imports:
     shinydashboardPlus,
     shinyjs,
     shinyWidgets,
-    stats,
     stringr
 Suggests: 
-    RSQLite,
-    spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    RSQLite
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US

@@ -73,6 +73,9 @@ library(VisualizacaoDados)
 -   Verficar uma forma de fazer uma UI legal sem usar shinydashboardPlus
     (talvez sem o proprio shinydashboard tb.)
 
+-   Verificar como mudar o icone e a palheta de cores pelo
+    golem-config.yml
+
 ## Code of Conduct
 
 Please note that the VisualizacaoDados project is released with a

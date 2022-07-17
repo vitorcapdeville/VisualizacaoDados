@@ -1,30 +1,25 @@
-#' filtro
+#' Criacao dos filtros para as queries.
 #'
-#' @description A fct function
+#' Verifica se os valores padrão foram modificados e cria os filtros necessários. Se todos os valores
+#' padrão estão selecionados, isto é, se nenhum filtro foi realizado, cria uma string vazia para
+#' evitar filtro desnecessário.
+#'
 #'
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
 criacao_filtro <- function(a, tipo, savedChoices, defaultValues, con) {
-  Id <- NULL #Avoid R CMD CHECK notes
   if (!identical(savedChoices[[a]], defaultValues[[a]])) {
     if (tipo == "dateRange") {
-      aux <- data.frame(savedChoices[[a]] %>% lubridate::ymd() %>% as.numeric())
-      names(aux) <- a
+      aux <- savedChoices[[a]] %>% lubridate::ymd() %>% as.numeric()
     } else {
-      aux <- data.frame(savedChoices[[a]])
-      names(aux) <- a
+      aux <- savedChoices[[a]]
+      aux = paste0("'", aux, "'")
     }
-    assign(
-      a,
-      aux %>%
-        dplyr::left_join(DBI::dbGetQuery(con, glue::glue("select * from {a}Id"))) %>%
-        dplyr::pull(Id)
-    )
     if (tipo %in% c("slider", "dateRange")) {
-      filtro <- glue::glue("{a} >= {get(a)[1]} and {a} <= {get(a)[2]}")
+      filtro <- glue::glue("{a} >= {aux[1]} and {a} <= {aux[2]}")
     } else {
-      filtro <- glue::glue("{a} in ({toString(get(a))})")
+      filtro <- glue::glue("{a} in ({toString(aux)})")
     }
   }
 }

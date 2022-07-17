@@ -28,7 +28,7 @@ mod_saved_choices_ui <- function(id, colunasExp, colunasExpNome, ncols,estrutura
 #' saved_choices Server Functions
 #'
 #' @noRd
-mod_saved_choices_server <- function(id, savedChoices,colunasExp, defaultValues, tipo){
+mod_saved_choices_server <- function(id, savedChoices, colunasExp, defaultValues, tipo){
   moduleServer(
     id,
     function(input, output, session) {

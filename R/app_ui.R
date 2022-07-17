@@ -12,8 +12,11 @@ app_ui <- function(request) {
   colunasFiltroTipo <- get_golem_config("colunasFiltroTipo")
   colunasTabela <- get_golem_config("colunasTabela")
   colunasTabelaNome <- get_golem_config("colunasTabelaNome")
+  tabela1 <- get_golem_config("tabela1")
+  tabela2 <- get_golem_config("tabela2")
 
-  defaultValues <- get_default_values(con = con, colunasFiltro = colunasFiltro, colunasFiltroTipo = colunasFiltroTipo)
+
+  defaultValues <- get_default_values(con = con, colunas_filtro = colunasFiltro, colunas_filtro_tipo = colunasFiltroTipo)
 
   tagList(
     # Leave this function for adding external resources

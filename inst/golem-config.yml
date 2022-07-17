@@ -2,7 +2,7 @@ default:
   golem_name: VisualizacaoDados
   golem_version: 0.0.0.9000
   app_prod: no
-  con: !expr DBI::dbConnect(RSQLite::SQLite(), "C:/Users/VitorCapdeville/OneDrive/Documentos/GitHub/VisualizacaoDados/inst/app/sinistralidade-sicoob.sqlite")
+  con: !expr DBI::dbConnect(RSQLite::SQLite(), "C:/Users/VitorCapdeville/Desktop/preparacao/data-test.sqlite")
   colunasFiltro: !expr c("Idade", "NomeProduto", "Cobertura", "TipoProduto", "RamoCodigo")
   colunasFiltroNome: !expr c("Idade", "Produto", "Cobertura", "Tipo de produto", "Ramo c\u00F3digo")
   colunasFiltroTipo: !expr c("slider", "picker", "picker", "picker", "picker")
@@ -11,8 +11,10 @@ default:
   tabela1: "premioVI"
   tabela2: "sinistroVI"
   colunasValorTabela1: !expr c("PremioEmitido", "PremioGanhoCorrigido", "ComissaoGanha")
+  colunasValorNomeTabela1: !expr c("Prêmio emitido", "Prêmio ganho", "Comissão ganha")
   formatosValorTabela1: !expr c("number", "number", "number")
   colunasValorTabela2: !expr c("SinistroComER")
+  colunasValorNomeTabela2: !expr c("Sinistro com ER")
   formatosValorTabela2: !expr c("number")
 production:
   app_prod: yes

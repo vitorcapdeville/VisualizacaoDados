@@ -13,10 +13,12 @@ app_server <- function(input, output, session) {
   tabela1 <- get_golem_config("tabela1")
   tabela2 <- get_golem_config("tabela2")
   colunasValorTabela1 <- get_golem_config("colunasValorTabela1")
+  colunasValorNomeTabela1 <- get_golem_config("colunasValorNomeTabela1")
   formatosValorTabela1 <- get_golem_config("formatosValorTabela1")
   colunasValorTabela2 <- get_golem_config("colunasValorTabela2")
+  colunasValorNomeTabela2 <- get_golem_config("colunasValorNomeTabela2")
   formatosValorTabela2 <- get_golem_config("formatosValorTabela2")
-  defaultValues <- get_default_values(con = con, colunasFiltro = colunasFiltro, colunasFiltroTipo = colunasFiltroTipo)
+  defaultValues <- get_default_values(con = con, colunas_filtro = colunasFiltro, colunas_filtro_tipo = colunasFiltroTipo)
 
   #------------------------------Estrutura para salvar selecao--------------------------------------
   # Valor inicial do savedChoices
@@ -26,7 +28,6 @@ app_server <- function(input, output, session) {
   for (i in colunasFiltro) {
     savedChoices[[i]] <- defaultValues[[i]]
   }
-
   mod_saved_choices_server("filtros", savedChoices, colunasFiltro, defaultValues, colunasFiltroTipo)
 
   #--------------------------------------------------Calculos da aba -------------------------------
@@ -41,8 +42,14 @@ app_server <- function(input, output, session) {
     }
     list(filtro = filtro)
   })
-  purrr::map2(colunasTabela, colunasTabela, mod_create_table_server, con, colunasValorTabela1, colunasValorTabela2, formatosValorTabela1, formatosValorTabela2, tabela1, tabela2, dados_filt, fixed = 1, widths = c("200px", "120px", "120px"))
-  # mod_create_table_server("NomeProduto", "NomeProduto")
+  purrr::map2(
+    colunasTabela, colunasTabela, mod_create_table_server, con,
+    colunasValorTabela1, colunasValorTabela2,
+    colunasValorNomeTabela1, colunasValorNomeTabela2,
+    formatosValorTabela1, formatosValorTabela2,
+    tabela1, tabela2,
+    dados_filt, fixed = 1, widths = c("200px", "120px", "120px")
+  )
 
   if (!interactive()) {
     session$onSessionEnded(function() {

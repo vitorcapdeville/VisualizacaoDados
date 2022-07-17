@@ -16,46 +16,87 @@ sketch <- function(dados, cols, align = "left") {
   )))
 }
 
-getSQLTable <- function(group, value1, value2, table1, table2, filtro, con) {
-  aux11 <- aux12 <- aux2 <- aux3 <- c()
-  for (i in value1) {
-    aux11 <- c(aux11, glue::glue("sum({i}) as {i}"))
-  }
-  for (i in value2) {
-    aux12 <- c(aux12, glue::glue("sum({i}) as {i}"))
-  }
-  for (i in group) {
-    aux2 <- c(aux2, glue::glue("t1.{i} = t2.{i}"))
-    aux3 <- c(aux3, glue::glue("t1.{i}"))
-  }
-  aux2 <- paste0(aux2, collapse = " and ")
+#' Funcoes auxiliares para montar a query.
+#'
+#' @param col nome da coluna a ser sumarizada (sum(col))
+#' @param name nome da coluna final (as name)
+#' @param group nome da coluna de agrupamento.
+#'
+#' @return string com a construcao para auxiliar na query.
+#' @noRd
+sum_as <- function(col, name){
+  glue::glue_collapse(glue::glue("sum({col}) as `{name}`"), sep = ", ")
+}
+join_on <- function(group){
+  glue::glue_collapse(glue::glue("t1.{group} = t2.{group}"), sep = " and ")
+}
+id_cols <- function(group){
+  glue::glue_collapse(glue::glue("t1.{group}"), sep = ", ")
+}
+
+#' Busca os dados em uma conexao e realiza a sumarizacao adequada.
+#'
+#' Essa funcao é a base para as tabelas padrão. Realiza uma query que filtra, sumariza e junta
+#' os dados da tabela1 e tabela2. Idealmente, a conexao deve possuir indices criados via "create index"
+#' para agilizar a query.
+#'
+#' @param con uma conexao criada com `DBI::dbConnect`.
+#' @param group um vetor com uma ou mais strings, definindo o nome das colunas que serao usada na
+#' clausula de `group by`.
+#' @param value1,value2 vetores com uma ou mais strings, definindo quais colunas serão sumarizadas.
+#' value1 se refere as colunas que pertencem a tabela1 e value2 se refere as colunas que pertencem a
+#' tabela2. A sumarização realizada é sempre a soma.
+#' @param name1,name2 vetores com uma ou mais strings, definindo o nome a ser usado para as colunas criadas
+#' com a sumarizacao de value1 e value2. Deve ter o mesmo tanho que value1 e value2.
+#' @param table1,table2 nome das tabelas.
+#' @param filtro uma string contendo a clausula de where completa (incluindo o termo where). Essa string
+#' usualmente é criada com a funcao `criacao_filtro`.
+#'
+#' @return um data.frame com as colunas definidas em group, value1 e value2.
+#' @noRd
+query_padrao <- function(con, group, value1, value2, name1, name2, table1, table2, filtro) {
+  stopifnot(length(filtro) == 1)
+  stopifnot(length(value1) == length(name1))
+  stopifnot(length(value2) == length(name2))
+
+  sumarizacao1 <- sum_as(value1, name1)
+  sumarizacao2 <- sum_as(value2, name2)
+
+  chaves_join <- join_on(group)
+
+  res_id <- id_cols(group)
+
+  name1 <- glue::glue("`{name1}`")
+  name2 <- glue::glue("`{name2}`")
+
+  # purrr::map(group,~DBI::Id(table = table1, column = .x))
   data <- DBI::dbGetQuery(
     con,
     glue::glue(
-      "select {toString(aux3)}, {toString(value1)}, {toString(value2)}
+      "select {res_id}, {toString(name1)}, {toString(name2)}
       from (
-        select {toString(group)}, {toString(aux11)}
+        select {toString(group)}, {sumarizacao1}
         from {table1}
         {filtro}
         group by {toString(group)}
       ) t1
       join (
-        select {toString(group)}, {toString(aux12)}
+        select {toString(group)}, {sumarizacao2}
         from {table2}
         {filtro}
         group by {toString(group)}
-      ) t2 on {aux2}
+      ) t2 on {chaves_join}
       "
     )
-  ) %>% data.table::as.data.table()
+  )
 
-  for (i in group) {
-    data <- data %>%
-      dplyr::left_join(DBI::dbGetQuery(con, glue::glue("select * from {i}Id")), by = c(stats::setNames("Id", i))) %>%
-      dplyr::select(!glue::glue("{i}")) %>%
-      dplyr::rename(!!i := glue::glue("{i}.y")) %>%
-      dplyr::select(dplyr::all_of(group), dplyr::all_of(c(value1, value2)))
-  }
+  # for (i in group) {
+  #   data <- data %>%
+  #     dplyr::left_join(DBI::dbGetQuery(con, glue::glue("select * from {i}Id")), by = c(stats::setNames("Id", i))) %>%
+  #     dplyr::select(!glue::glue("{i}")) %>%
+  #     dplyr::rename(!!i := glue::glue("{i}.y")) %>%
+  #     dplyr::select(dplyr::all_of(group), dplyr::all_of(c(value1, value2)))
+  # }
 
   return(data)
 }
