@@ -61,6 +61,11 @@ library(VisualizacaoDados)
 
 -   Deixar as queries mais rápidas.
 
+-   Usar app_config e config file para setar a conexao e as variaveis
+    que definem quais filtros e tabelas serao criados.
+
+-   Talvez separar os filtros das tabelas.
+
 ## Code of Conduct
 
 Please note that the VisualizacaoDados project is released with a

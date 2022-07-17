@@ -5,11 +5,13 @@ app_global <- function() {
   colunasExpNome <<- c("Idade", "Produto", "Cobertura", "Tipo de produto", "Ramo c\u00F3digo")
   colunasExpTipo <<- c("slider", "picker", "picker", "picker", "picker")
   colunasValorTabela1 <<- c("PremioEmitido", "PremioGanhoCorrigido", "ComissaoGanha")
+  formatosValor1 <<- c("number", "number", "number")
   colunasValorTabela2 <<- c("SinistroComER")
+  formatosValor2 <<- c("number")
 
   tabela1 <<- "premioVI"
   tabela2 <<- "sinistroVI"
-  list(colunasExp, colunasExpNome, colunasExpTipo, colunasValorTabela1, colunasValorTabela2, tabela1, tabela2)
+  list(colunasExp, colunasExpNome, colunasExpTipo, colunasValorTabela1, colunasValorTabela2, tabela1, tabela2,formatosValor1,formatosValor2)
   defaultValues <<- list()
   for (i in colunasExp) {
     if (!DBI::dbExistsTable(con, glue::glue("{i}Id"))) stop("Tabela ", i, "Id nao encontrada.")

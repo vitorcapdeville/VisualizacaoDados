@@ -28,7 +28,7 @@ app_server <- function(input, output, session) {
     list(filtro = filtro)
   })
 
-  mod_create_table_server("NomeProduto", "NomeProduto", colunasValorTabela1, colunasValorTabela2, tabela1, tabela2, dados_filt, fixed = 1, widths = c("200px", "120px", "120px"))
+  mod_create_table_server("NomeProduto", "NomeProduto", colunasValorTabela1, colunasValorTabela2, formatosValor1, formatosValor2, tabela1, tabela2, dados_filt, fixed = 1, widths = c("200px", "120px", "120px"))
 
   if (!interactive()) {
     session$onSessionEnded(function() {

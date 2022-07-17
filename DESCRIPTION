@@ -23,6 +23,7 @@ Imports:
     magrittr,
     openxlsx,
     purrr,
+    rlang,
     RSQLite,
     shiny (>= 1.7.1),
     shinycssloaders,

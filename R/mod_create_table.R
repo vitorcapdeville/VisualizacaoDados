@@ -5,7 +5,10 @@
 #' @param id,input,output,session Internal parameters for {shiny}.
 #' @param nome titulo da tabela para ser exibido na UI.
 #' @param group variavel (ou variaveis) que serão usadas para o agrupamento
-#' @param value variaveis que serão criadas para cada grupo, usando soma
+#' @param value1 variaveis que serão criadas para cada grupo, usando soma, originadas da tabela1
+#' @param value2 variaveis que serão criadas para cada grupo, usando soma, originadas da tabela2
+#' @param formats1 "perc" ou "number". Define o tipo de formatacao a ser aplicada as colunas definidas em value1
+#' @param formats2 "perc" ou "number". Define o tipo de formatacao a ser aplicada as colunas definidas em value1
 #' @param table1 Nome da tabela 1 (usualmente, premio)
 #' @param table2 Nome da tabela 1 (usualmente, sinistro)
 #' @param filtro String com a estrutura do filtro em linguagem SQL
@@ -42,7 +45,7 @@ mod_create_table_ui <- function(id, nome) {
 #' create_table Server Functions
 #'
 #' @noRd
-mod_create_table_server <- function(id, group, value1, value2, table1, table2, filtro, fixed = 1,
+mod_create_table_server <- function(id, group, value1, value2, formats1, formats2, table1, table2, filtro, fixed = 1,
                                     widths = c("400px","200px","200px"), align = "left", scrollY = "600px", footer = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
@@ -64,7 +67,7 @@ mod_create_table_server <- function(id, group, value1, value2, table1, table2, f
 
       output$tabelaPadrao <- DT::renderDT({
         createDT(
-          preTable()$tabela, group, fixed,
+          preTable()$tabela, group, fixed, c(value1, value2), c(formats1, formats2),
           widths, align, nrow(preTable()$tabela), scrollY, footer
         )
 

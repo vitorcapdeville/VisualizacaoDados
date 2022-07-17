@@ -60,7 +60,7 @@ getSQLTable <- function(group, value1, value2, table1, table2, filtro) {
   return(data)
 }
 
-createDT <- function(data, colsFixed, fixed = 1,
+createDT <- function(data, colsFixed, fixed = 1, cols, formats,
                      widths = c("400px", "200px", "200px"),
                      align = "left",
                      pageLength = nrow(data), scrollY = T, footer = T) {
@@ -71,21 +71,23 @@ createDT <- function(data, colsFixed, fixed = 1,
   } else {
     dom <- "t"
   }
-  soma1 <- which(names(data) %in% (data %>% dplyr::select(tidyselect::vars_select_helpers$where(is.numeric) & !dplyr::ends_with("Percentual")) %>% names())) - 1
 
-  total <- which(names(data) %in% colsFixed) - 1
+  soma1 <- which(names(data) %in% cols[formats == "number"]) - 1
+  traco <- which(names(data) %in% cols[formats == "perc"]) - 1
+  browser()
+  total <- seq(fixed) - 1
 
   if (footer) {
     javascript <- DT::JS(
-      js_op_aux("start",align = align),
+      js_op_aux("start", align = align),
       js_op(total, operation = "custom", txt = "Total"),
+      js_op(traco, operation = "custom", txt = "-"),
       js_op(soma1, operation = "sum", txt = ""),
-      js_op_aux("end",align = align)
+      js_op_aux("end", align = align)
     )
   } else {
     javascript <- NA
   }
-
 
   DT::datatable(data,
     container = js_op_aux("sketch", data, align = align),
@@ -108,5 +110,11 @@ createDT <- function(data, colsFixed, fixed = 1,
       ),
       footerCallback = javascript
     )
-  )
+  ) %>%
+    {
+      if (length(formats[formats == "number"]) > 0) DT::formatCurrency(., cols[formats == "number"], "", mark = ".", dec.mark = ",") else .
+    } %>%
+    {
+      if (length(formats[formats == "perc"]) > 0) DT::formatPercentage(., cols[formats == "perc"], digits = 2, mark = ".", dec.mark = ",") else .
+    }
 }
