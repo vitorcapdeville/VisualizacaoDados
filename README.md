@@ -60,8 +60,6 @@ library(VisualizacaoDados)
     juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
     varias linhas da segunda tabela.
 
--   Deixar as queries mais rápidas.
-
 -   Incluir dados de exemplo, usar pinguins.
 
 -   Incluir a documentação e reescrever as funções de forma mais
@@ -75,6 +73,9 @@ library(VisualizacaoDados)
 
 -   Verificar como mudar o icone e a palheta de cores pelo
     golem-config.yml
+
+-   Verificar por que a coluna q esta fixed no createDT esta vindo com o
+    texto “-” ao inves de “Total” na soma.
 
 ## Code of Conduct
 

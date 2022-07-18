@@ -1,32 +1,43 @@
-#' server
+#' Update input
 #'
-#' @description A utils function
+#' atualiza um input de picker, slider, checkbox ou dateRange.
 #'
-#' @return The return value, if any, from executing the utility.
+#' @param coluna_filtro string com o nome da coluna de filtro
+#' @param coluna_filtro_tipo string com o tipo de filtro.
+#' @param session requerido pelo shiny.
+#' @param default_values valores padrao para o input.
+#' @param input valores q o usuario escolheu para o input.
 #'
 #' @noRd
-updateXXXInput <- function(a, tipo, session, defaultValues, input) {
-  if (tipo == "picker") {
-    if (comparacao1(a, defaultValues, input)) {
-      shinyWidgets::updatePickerInput(session, a, selected = defaultValues[[a]])
+updateXXXInput <- function(coluna_filtro, coluna_filtro_tipo, session, default_values, input) {
+  if (coluna_filtro_tipo == "picker") {
+    if (comparacao1(coluna_filtro, default_values, input)) {
+      shinyWidgets::updatePickerInput(session, coluna_filtro, selected = default_values[[coluna_filtro]])
     }
-  } else if (tipo == "slider") {
-    if (comparacao1(a, defaultValues, input)) {
-      updateSliderInput(session, a, value = defaultValues[[a]])
+  } else if (coluna_filtro_tipo == "slider") {
+    if (comparacao1(coluna_filtro, default_values, input)) {
+      updateSliderInput(session, coluna_filtro, value = default_values[[coluna_filtro]])
     }
-  } else if (tipo == "checkBox") {
-    if (comparacao1(a, defaultValues, input)) {
-      shinyWidgets::updateCheckboxGroupButtons(session, a, selected = defaultValues[[a]])
+  } else if (coluna_filtro_tipo == "checkBox") {
+    if (comparacao1(coluna_filtro, default_values, input)) {
+      shinyWidgets::updateCheckboxGroupButtons(session, coluna_filtro, selected = default_values[[coluna_filtro]])
     }
-  } else if (tipo == "dateRange") {
-    if (comparacao1(a, defaultValues, input)) {
-      updateDateRangeInput(session, a, start = defaultValues[[a]][1], end = defaultValues[[a]][2])
+  } else if (coluna_filtro_tipo == "dateRange") {
+    if (comparacao1(coluna_filtro, default_values, input)) {
+      updateDateRangeInput(session, coluna_filtro, start = default_values[[coluna_filtro]][1], end = default_values[[coluna_filtro]][2])
     }
   }
 }
 
-saveInput <- function(a, input, savedChoices) {
-  if (!(comparacao2(a, input, savedChoices))) {
-    savedChoices[[a]] <- input[[a]]
+#' Save input para o saved_choices
+#'
+#' @param coluna_filtro string com o nome da coluna de filtro.
+#' @param input valores que o usuario escolheu
+#' @param saved_choices valores escolhidos e confirmados anteriormente.
+#'
+#' @noRd
+saveInput <- function(coluna_filtro, input, saved_choices) {
+  if (!(comparacao2(coluna_filtro, input, saved_choices))) {
+    saved_choices[[coluna_filtro]] <- input[[coluna_filtro]]
   }
 }

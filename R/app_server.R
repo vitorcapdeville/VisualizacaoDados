@@ -33,12 +33,12 @@ app_server <- function(input, output, session) {
   #--------------------------------------------------Calculos da aba -------------------------------
   # Criação dos filtros necessário. Se não for necessário nenhum filtro, não filtrar.
   dados_filt <- reactive({
-    filtro <- unlist(purrr::map2(colunasFiltro, colunasFiltroTipo, criacao_filtro, savedChoices, defaultValues, con))
+    filtro <- unlist(purrr::pmap(list(colunasFiltro, colunasFiltroTipo, rvtl(savedChoices)[colunasFiltro], defaultValues[colunasFiltro]), criacao_filtro, con))
 
     if (!is.null(filtro)) {
-      filtro <- paste0("where ", paste0(filtro, collapse = " and "))
+      filtro <- glue::glue_sql("where ", glue::glue_sql_collapse(filtro, sep = " and "), .con = con)
     } else {
-      filtro <- ""
+      filtro <- glue::glue_sql("", .con = con)
     }
     list(filtro = filtro)
   })

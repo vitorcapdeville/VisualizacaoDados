@@ -4,22 +4,25 @@
 #' padrão estão selecionados, isto é, se nenhum filtro foi realizado, cria uma string vazia para
 #' evitar filtro desnecessário.
 #'
+#' @param coluna_filtro uma unica string com a coluna sobre o qual o filtro esta sendo aplicado (ou nao)
+#' @param coluna_filtro_tipo uma unica string dizendo qual é o tipo de filtro desta coluna.
+#' @param saved_choice escolhas atualmente salvas para essa coluna
+#' @param default_value valores padrao para esta coluna.
 #'
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-criacao_filtro <- function(a, tipo, savedChoices, defaultValues, con) {
-  if (!identical(savedChoices[[a]], defaultValues[[a]])) {
-    if (tipo == "dateRange") {
-      aux <- savedChoices[[a]] %>% lubridate::ymd() %>% as.numeric()
+criacao_filtro <- function(coluna_filtro, coluna_filtro_tipo, saved_choice, default_value, con) {
+  if (!identical(sort(saved_choice), sort(default_value))) {
+    if (coluna_filtro_tipo == "dateRange") {
+      aux <- saved_choice %>% lubridate::ymd()
     } else {
-      aux <- savedChoices[[a]]
-      aux = paste0("'", aux, "'")
+      aux <- saved_choice
     }
-    if (tipo %in% c("slider", "dateRange")) {
-      filtro <- glue::glue("{a} >= {aux[1]} and {a} <= {aux[2]}")
+    if (coluna_filtro_tipo %in% c("slider", "dateRange")) {
+      filtro <- glue::glue_sql("{`coluna_filtro`} >= {min_val} and {`coluna_filtro`} <= {max_val}", min_val = aux[1], max_val = aux[2], .con = con)
     } else {
-      filtro <- glue::glue("{a} in ({toString(aux)})")
+      filtro <- glue::glue_sql("{`coluna_filtro`} in ({escolhas*})", escolhas = aux, .con = con)
     }
   }
 }

@@ -3,15 +3,21 @@
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @param colunasExp,colunasExpNome,ncols,estruturaPadrao,defaultValues,tipo,step adicionar descricao
+#' @param colunas_filtro nome das colunas (identicos ao sql) nas quais serao criados os filtros.
+#' @param colunas_filtro_nome nome que será de fato exibido próximo ao filtro.
+#' @param colunas_filtro_tipo tipo de filtro associado a coluna.
+#' @param ncols numero de colunas para a estrutura padrao
+#' @param estruturaPadrao funcao que define a estrutura padrao
+#' @param default_values valores default de todos os filtros.
+#' @param step só é usado quando tipo = slider. Define o step do slider.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_saved_choices_ui <- function(id, colunasExp, colunasExpNome, ncols,estruturaPadrao, defaultValues, tipo, step = 1){
+mod_saved_choices_ui <- function(id, colunas_filtro, colunas_filtro_nome, ncols,estruturaPadrao, default_values, tipo, step = 1){
   ns <- NS(id)
   tagList(
-    filtrosEstrutura(purrr::map(colunasExp, ns), colunasExpNome, ncols, estruturaPadrao, defaultValues, tipo, step = 1),
+    filtrosEstrutura(purrr::map(colunas_filtro, ns), colunas_filtro_nome, ncols, estruturaPadrao, default_values, tipo, step = 1),
     hr(),
     tagList(
       tags$div(
@@ -27,8 +33,10 @@ mod_saved_choices_ui <- function(id, colunasExp, colunasExpNome, ncols,estrutura
 
 #' saved_choices Server Functions
 #'
+#' @param saved_choices escolhas salvas pelo usuario. deve ser criado com reactiveValues
+#'
 #' @noRd
-mod_saved_choices_server <- function(id, savedChoices, colunasExp, defaultValues, tipo){
+mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_values, colunas_filtro_tipo){
   moduleServer(
     id,
     function(input, output, session) {
@@ -36,7 +44,7 @@ mod_saved_choices_server <- function(id, savedChoices, colunasExp, defaultValues
       # Renderizar botão de reset (apenas se houver alguma modificacao)
       output$reset_button <- renderUI({
         ns <- session$ns
-        if (any(unlist(purrr::map(colunasExp,comparacao1, defaultValues, input)))) {
+        if (any(unlist(purrr::map(colunas_filtro,comparacao1, default_values, input)))) {
           actionButton(
             inputId = ns('reset'),
             label = 'Resetar sele\u00E7\u00E3o'
@@ -46,13 +54,13 @@ mod_saved_choices_server <- function(id, savedChoices, colunasExp, defaultValues
 
       # Efeito do botao reset
       observeEvent(input$reset, {
-        purrr::walk2(colunasExp, tipo, updateXXXInput, session, defaultValues, input)
+        purrr::walk2(colunas_filtro, colunas_filtro_tipo, updateXXXInput, session, default_values, input)
       })
 
       # Renderizar botao de salvar, azul se houver alteracao, branco caso contrario.
       output$save_button <- renderUI({
         ns <- session$ns
-        status <- ifelse(all(unlist(purrr::map(colunasExp,comparacao2, input, savedChoices))),
+        status <- ifelse(all(unlist(purrr::map(colunas_filtro,comparacao2, input, saved_choices))),
                          'light', 'primary')
         actionButton(
           inputId = ns('save'),
@@ -63,10 +71,10 @@ mod_saved_choices_server <- function(id, savedChoices, colunasExp, defaultValues
 
       # Efeito do botao salvar
       observeEvent(input$save, {
-        purrr::walk(colunasExp, saveInput, input, savedChoices)
+        purrr::walk(colunas_filtro, saveInput, input, saved_choices)
       })
 
-      return(savedChoices)
+      return(saved_choices)
     }
   )
 }

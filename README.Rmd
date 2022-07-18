@@ -59,8 +59,6 @@ library(VisualizacaoDados)
 
 -   Verificar se é mais eficiente juntar as duas tabelas em uma tabela só, ou deixar duas tabelas separadas. A ideia de duas tabelas separadas é que uma delas geralmente é muito menor, entao em tese juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em varias linhas da segunda tabela.
 
--   Deixar as queries mais rápidas.
-
 -   Incluir dados de exemplo, usar pinguins.
 
 -   Incluir a documentação e reescrever as funções de forma mais intuitiva.
@@ -70,6 +68,8 @@ library(VisualizacaoDados)
 -   Verficar uma forma de fazer uma UI legal sem usar shinydashboardPlus (talvez sem o proprio shinydashboard tb.)
 
 -   Verificar como mudar o icone e a palheta de cores pelo golem-config.yml
+
+-   Verificar por que a coluna q esta fixed no createDT esta vindo com o texto "-" ao inves de "Total" na soma.
 
 ## Code of Conduct
 

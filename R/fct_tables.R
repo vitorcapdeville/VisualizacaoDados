@@ -24,14 +24,11 @@ sketch <- function(dados, cols, align = "left") {
 #'
 #' @return string com a construcao para auxiliar na query.
 #' @noRd
-sum_as <- function(col, name){
-  glue::glue_collapse(glue::glue("sum({col}) as `{name}`"), sep = ", ")
+sum_as <- function(col, name, con){
+  glue::glue_sql_collapse(glue::glue_sql("sum({`col`}) as {`name`}", .con = con), sep = ", ")
 }
-join_on <- function(group){
-  glue::glue_collapse(glue::glue("t1.{group} = t2.{group}"), sep = " and ")
-}
-id_cols <- function(group){
-  glue::glue_collapse(glue::glue("t1.{group}"), sep = ", ")
+join_on <- function(group, con){
+  glue::glue_sql_collapse(glue::glue_sql("t1.{`group`} = t2.{`group`}", .con = con), sep = " and ")
 }
 
 #' Busca os dados em uma conexao e realiza a sumarizacao adequada.
@@ -59,34 +56,44 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
   stopifnot(length(value1) == length(name1))
   stopifnot(length(value2) == length(name2))
 
-  sumarizacao1 <- sum_as(value1, name1)
-  sumarizacao2 <- sum_as(value2, name2)
+  sumarizacao1 <- sum_as(value1, name1, con)
+  sumarizacao2 <- sum_as(value2, name2, con)
 
-  chaves_join <- join_on(group)
+  chaves_join <- join_on(group, con)
 
-  res_id <- id_cols(group)
+  group1 = purrr::map(group,~DBI::Id(table = table1, column = .x))
+  group2 = purrr::map(group,~DBI::Id(table = table2, column = .x))
+  if (length(group1) == 1) group1 = group1[[1]]
+  if (length(group2) == 1) group2 = group2[[1]]
 
-  name1 <- glue::glue("`{name1}`")
-  name2 <- glue::glue("`{name2}`")
+  subquery1 = glue::glue_sql(
+    "select {`group1`*},",sumarizacao1,"\n",
+    "from {`table1`}\n",
+    filtro,"\n",
+    "group by {`group1`*}",
+    .con = con
+  )
+  subquery2 = glue::glue_sql(
+    "select {`group2`*},",sumarizacao2,"\n",
+    "from {`table2`}\n",
+    filtro,"\n",
+    "group by {`group2`*}",
+    .con = con
+  )
 
-  # purrr::map(group,~DBI::Id(table = table1, column = .x))
+  cols = c(
+    purrr::map(group,~DBI::Id(table = "t1", column = .x)),
+    purrr::map(name1, ~DBI::Id(table = "t1", column = .x)),
+    purrr::map(name2, ~DBI::Id(table = "t2", column = .x))
+  )
   data <- DBI::dbGetQuery(
     con,
-    glue::glue(
-      "select {res_id}, {toString(name1)}, {toString(name2)}
-      from (
-        select {toString(group)}, {sumarizacao1}
-        from {table1}
-        {filtro}
-        group by {toString(group)}
-      ) t1
-      join (
-        select {toString(group)}, {sumarizacao2}
-        from {table2}
-        {filtro}
-        group by {toString(group)}
-      ) t2 on {chaves_join}
-      "
+    glue::glue_sql(
+      "select {`cols`*}
+      from ({subquery1}) t1
+      join ({subquery2}) t2 on {chaves_join}
+      ",
+      .con = con
     )
   )
 
