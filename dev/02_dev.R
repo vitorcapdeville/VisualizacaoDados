@@ -32,6 +32,7 @@ golem::add_utils("server", with_test = TRUE)
 golem::add_utils("", with_test = TRUE)
 golem::add_utils("data_range_month", with_test = TRUE)
 golem::add_utils("dt_footer", with_test = TRUE)
+golem::add_utils("formata_dados", with_test = TRUE)
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
