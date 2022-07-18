@@ -28,32 +28,35 @@
 #' @importFrom shiny NS tagList
 mod_create_table_ui <- function(id, nome) {
   ns <- NS(id)
-  shinydashboardPlus::box(
-    title = strong(nome),
-    id = ns("tabelaPadraoBox"),
-    collapsible = TRUE,
-    collapsed = T,
-    closable = F,
-    shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
-    width = 12,
-    dropdownMenu = shinydashboardPlus::boxDropdown(shinydashboardPlus::boxDropdownItem(
-      downloadButton(ns("tabelaPadraoDownload"), "Download"),
-      id = ns("tabelaPadraoDownload2")
-    ))
-  )
+
+  tabPanel(title = strong(nome), value = ns("tabelaPadraoBox"),shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))))
+
+  # shinydashboard::box(
+  #   title = strong(nome),
+  #   id = ns("tabelaPadraoBox"),
+  #   collapsible = TRUE,
+  #   collapsed = T,
+  #   closable = F,
+  #   shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
+  #   width = 12
+  #   # ,
+  #   # dropdownMenu = shinydashboardPlus::boxDropdown(shinydashboardPlus::boxDropdownItem(
+  #   #   downloadButton(ns("tabelaPadraoDownload"), "Download"),
+  #   #   id = ns("tabelaPadraoDownload2")
+  #   # ))
+  # )
 }
 #' create_table Server Functions
 #'
 #' @noRd
 mod_create_table_server <- function(id, group, con, value1, value2, name1, name2, formats1, formats2, table1, table2, filtro, fixed = 1,
-                                    widths = c("400px","200px","200px"), align = "left", scrollY = "600px", footer = T) {
+                                    widths = c("400px","200px","200px"), align = "left", footer = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
     id,
     function(input, output, session) {
 
       preTable <- reactive({
-        req(!input$tabelaPadraoBox$collapsed)
         tabela = query_padrao(
           con = con,
           group = group,
@@ -71,20 +74,20 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
       output$tabelaPadrao <- DT::renderDT({
         createDT(
           preTable()$tabela, group, fixed, c(name1, name2), c(formats1, formats2),
-          widths, align, nrow(preTable()$tabela), scrollY, footer
+          widths, align, nrow(preTable()$tabela), footer
         )
       })
 
-      output$tabelaPadraoDownload <- downloadHandler(
-        filename = function() {
-          glue::glue("Resultado por {toString(group)}.xlsx")
-        },
-        content = function(file) {
-          dados = preTable()$tabela
-          dados[is.na(dados)] = 0
-          openxlsx::write.xlsx(dados, file, row.names = F)
-        }
-      )
+      # output$tabelaPadraoDownload <- downloadHandler(
+      #   filename = function() {
+      #     glue::glue("Resultado por {toString(group)}.xlsx")
+      #   },
+      #   content = function(file) {
+      #     dados = preTable()$tabela
+      #     dados[is.na(dados)] = 0
+      #     openxlsx::write.xlsx(dados, file, row.names = F)
+      #   }
+      # )
 
       return(preTable)
     }

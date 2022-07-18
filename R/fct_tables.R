@@ -111,7 +111,7 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
 createDT <- function(data, colsFixed, fixed = 1, cols, formats,
                      widths = c("400px", "200px", "200px"),
                      align = "left",
-                     pageLength = nrow(data), scrollY = T, footer = T) {
+                     pageLength = nrow(data), footer = T) {
   . <- NULL #Avoid R CMD Check notes
   data <- as.data.frame(data)
 
@@ -144,7 +144,8 @@ createDT <- function(data, colsFixed, fixed = 1, cols, formats,
     options = list(
       "autoWidth" = TRUE,
       "pageLength" = pageLength,
-      "scrollY" = scrollY,
+      "scrollY" = "400px",
+      "scrollCollapse" = T,
       "scrollX" = TRUE,
       "searching" = FALSE,
       "dom" = dom,

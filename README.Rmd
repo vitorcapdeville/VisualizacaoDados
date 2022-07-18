@@ -65,11 +65,12 @@ library(VisualizacaoDados)
 
 -   Verificar a possibilidade de sobrescrever as opções definidas em "golem-config.yml" usando os parametros do run_app().
 
--   Verficar uma forma de fazer uma UI legal sem usar shinydashboardPlus (talvez sem o proprio shinydashboard tb.)
-
 -   Verificar como mudar o icone e a palheta de cores pelo golem-config.yml
 
 -   Verificar por que a coluna q esta fixed no createDT esta vindo com o texto "-" ao inves de "Total" na soma.
+
+-   Verificar global assignment em app_global ou uma melhor forma de compartilhar valores em app_server e app_ui.
+
 
 ## Code of Conduct
 

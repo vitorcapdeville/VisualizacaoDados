@@ -21,18 +21,15 @@ Imports:
     htmltools,
     lubridate,
     magrittr,
-    openxlsx,
     purrr,
     shiny (>= 1.7.1),
     shinycssloaders,
     shinydashboard,
-    shinydashboardPlus,
     shinyjs,
     shinyWidgets,
     stringr
 Suggests: 
-    testthat (>= 3.0.0),
-    RSQLite
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
