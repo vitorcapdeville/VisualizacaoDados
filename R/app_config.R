@@ -23,7 +23,7 @@ app_sys <- function(...) {
 #'
 #' @noRd
 get_golem_config <- function(
-  value,
+  value = NULL,
   config = Sys.getenv(
     "GOLEM_CONFIG_ACTIVE",
     Sys.getenv(

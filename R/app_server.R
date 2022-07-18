@@ -5,6 +5,7 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
+
   #------------------------------Estrutura para salvar selecao--------------------------------------
   # Valor inicial do savedChoices
   savedChoices <- reactiveValues()

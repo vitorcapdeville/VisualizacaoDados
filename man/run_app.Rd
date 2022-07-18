@@ -4,7 +4,13 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(options = list(), enableBookmarking = NULL, uiPattern = "/", ...)
+run_app(
+  options = list(),
+  enableBookmarking = NULL,
+  uiPattern = "/",
+  config_file = app_sys("golem-config.yml"),
+  ...
+)
 }
 \arguments{
 \item{options}{Named options that should be passed to the \code{runApp} call
@@ -22,6 +28,8 @@ for more information on bookmarking your app.}
 request to determine whether the \code{ui} should be used to handle the
 request. Note that the entire request path must match the regular
 expression in order for the match to be considered successful.}
+
+\item{config_file}{location of the config file to be used.}
 
 \item{...}{arguments to pass to golem_opts.
 See `?golem::get_golem_options` for more details.}

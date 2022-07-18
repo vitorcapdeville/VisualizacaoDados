@@ -14,10 +14,14 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_saved_choices_ui <- function(id, colunas_filtro, colunas_filtro_nome, ncols,estruturaPadrao, default_values, tipo, step = 1){
+mod_saved_choices_ui <- function(id, colunas_filtro, colunas_filtro_nome, ncols,estruturaPadrao, default_values, colunas_filtro_tipo, step = 1){
   ns <- NS(id)
   tagList(
-    filtrosEstrutura(purrr::map(colunas_filtro, ns), colunas_filtro_nome, ncols, estruturaPadrao, default_values, tipo, step = 1),
+    filtrosEstrutura(
+      id = purrr::map(colunas_filtro, ns), colunas_filtro_nome = colunas_filtro_nome, ncols = ncols,
+      estruturaPadrao = estruturaPadrao, default_values = default_values,
+      colunas_filtro_tipo = colunas_filtro_tipo, step = 1
+    ),
     hr(),
     tagList(
       tags$div(
@@ -44,7 +48,7 @@ mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_
       # Renderizar botão de reset (apenas se houver alguma modificacao)
       output$reset_button <- renderUI({
         ns <- session$ns
-        if (any(unlist(purrr::map(colunas_filtro,comparacao1, default_values, input)))) {
+        if (any(unlist(purrr::map(colunas_filtro, ~comparacao1(coluna_filtro = .x, defaultValues = default_values, input = input))))) {
           actionButton(
             inputId = ns('reset'),
             label = 'Resetar sele\u00E7\u00E3o'
@@ -54,13 +58,13 @@ mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_
 
       # Efeito do botao reset
       observeEvent(input$reset, {
-        purrr::walk2(colunas_filtro, colunas_filtro_tipo, updateXXXInput, session, default_values, input)
+        purrr::walk2(colunas_filtro, colunas_filtro_tipo, ~updateXXXInput(coluna_filtro = .x,coluna_filtro_tipo = .y, session = session,default_values = default_values, input = input))
       })
 
       # Renderizar botao de salvar, azul se houver alteracao, branco caso contrario.
       output$save_button <- renderUI({
         ns <- session$ns
-        status <- ifelse(all(unlist(purrr::map(colunas_filtro,comparacao2, input, saved_choices))),
+        status <- ifelse(all(unlist(purrr::map(colunas_filtro, ~comparacao2(coluna_filtro = .x , input = input, savedChoices = saved_choices)))),
                          'light', 'primary')
         actionButton(
           inputId = ns('save'),

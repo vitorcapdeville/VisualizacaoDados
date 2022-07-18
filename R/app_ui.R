@@ -5,10 +5,9 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  header <- shinydashboard::dashboardHeader(title = "app")
+  header <- shinydashboard::dashboardHeader(title = "Sinistralidade SICOOB")
 
   sidebar <- shinydashboard::dashboardSidebar(
-    minified = F,
     collapsed = TRUE,
     shinydashboard::sidebarMenu(
       id = "sidebarMenu",
@@ -35,7 +34,7 @@ app_ui <- function(request) {
           width = 12,
           mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 3, estruturaPadrao, defaultValues, colunasFiltroTipo, 1)
         ),
-        do.call(shinydashboard::tabBox, c(list(title = "Tabelas", id = "tabset1", width = 12),purrr::map2(colunasTabela, colunasTabelaNome, mod_create_table_ui)))
+        do.call(shinydashboard::tabBox, c(list(title = "", id = "tabset1", width = 12),purrr::map2(colunasTabela, colunasTabelaNome, mod_create_table_ui)))
       )
     )
   )
@@ -48,8 +47,7 @@ app_ui <- function(request) {
     shinydashboard::dashboardPage(
       header = header,
       sidebar = sidebar,
-      body = body,
-      title = "Visualiza\u00E7ao Dados"
+      body = body
     )
   )
 }
@@ -72,9 +70,10 @@ golem_add_external_resources <- function() {
     favicon(),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "VisualizacaoDados"
+      app_title = configs$nome_pagina
     ),
-    shinyjs::useShinyjs()
+    shinyjs::useShinyjs(),
+    fresh::use_theme(configs$fresh_theme)
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
   )

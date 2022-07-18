@@ -59,7 +59,7 @@ dateRangeMonthsInput <- function(inputId, label, start = NULL, end = NULL,
 
 `%AND%` <- function(x, y) {
   if (!is.null(x) && !is.na(x)) {
-    if (!is.null(y) && !is.na(y)) {
+    if (!is.null(y) && !any(is.na(y))) {
       return(y)
     }
   }

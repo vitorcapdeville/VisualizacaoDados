@@ -68,8 +68,7 @@ library(VisualizacaoDados)
 -   Verificar a possibilidade de sobrescrever as opções definidas em
     “golem-config.yml” usando os parametros do run_app().
 
--   Verificar como mudar o icone e a palheta de cores pelo
-    golem-config.yml
+-   Verificar como usar uma imagem fora de www no shiny.
 
 -   Verificar por que a coluna q esta fixed no createDT esta vindo com o
     texto “-” ao inves de “Total” na soma.

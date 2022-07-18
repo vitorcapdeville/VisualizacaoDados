@@ -108,7 +108,7 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
   return(data)
 }
 
-createDT <- function(data, colsFixed, fixed = 1, cols, formats,
+createDT <- function(data, fixed = 1, cols, formats,
                      widths = c("400px", "200px", "200px"),
                      align = "left",
                      pageLength = nrow(data), footer = T) {
