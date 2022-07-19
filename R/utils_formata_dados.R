@@ -18,13 +18,20 @@
 formata_dados <- function(con, tabela1, tabela2, nometabela1, nometabela2, colunas_exploratorias, colunas_valor1, colunas_valor2, overwrite = F) {
   base_full <- dplyr::bind_rows(tabela1, tabela2)
 
-  stopifnot(any(!colunas_exploratorias %in% names(tabela1)))
-  stopifnot(any(!colunas_exploratorias %in% names(tabela2)))
-  stopifnot(any(!colunas_valor1 %in% names(tabela1)))
-  stopifnot(any(!colunas_valor2 %in% names(tabela2)))
+  stopifnot(all(colunas_exploratorias %in% names(tabela1)))
+  stopifnot(all(colunas_exploratorias %in% names(tabela2)))
+  stopifnot(all(colunas_valor1 %in% names(tabela1)))
+  stopifnot(all(colunas_valor2 %in% names(tabela2)))
 
   tabela1 <- tabela1 %>% dplyr::select(dplyr::all_of(c(colunas_exploratorias, colunas_valor1)))
   tabela2 <- tabela2 %>% dplyr::select(dplyr::all_of(c(colunas_exploratorias, colunas_valor2)))
+
+  date_cols1 <- grep("Date", unlist(sapply(tabela1, class)))
+  date_cols2 <- grep("Date", unlist(sapply(tabela2, class)))
+
+  if (length(date_cols1) > 0 || length(date_cols2) > 0) {
+    stop("Por favor, converta as colunas do tipo Date em character.")
+  }
 
   # Essas tabelas servem para extrair os valores default de todas as colunas de filtro.
   id_tables <- map(colunas_exploratorias, ~ get_id(base_full, .x))

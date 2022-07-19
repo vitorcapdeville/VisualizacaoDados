@@ -44,7 +44,6 @@ mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_
   moduleServer(
     id,
     function(input, output, session) {
-
       # Renderizar botão de reset (apenas se houver alguma modificacao)
       output$reset_button <- renderUI({
         ns <- session$ns

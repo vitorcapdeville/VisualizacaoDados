@@ -2,20 +2,20 @@ default:
   golem_name: VisualizacaoDados
   golem_version: 0.0.0.9000
   app_prod: no
-  con: !expr DBI::dbConnect(RSQLite::SQLite(), "C:/Users/VitorCapdeville/Desktop/preparacao/data-test.sqlite")
-  colunasFiltro: !expr c("Idade", "NomeProduto", "Cobertura", "TipoProduto", "RamoCodigo")
-  colunasFiltroNome: !expr c("Idade", "Produto", "Cobertura", "Tipo de produto", "Ramo c\u00F3digo")
-  colunasFiltroTipo: !expr c("slider", "picker", "picker", "picker", "picker")
-  colunasTabela: !expr c("NomeProduto", "Cobertura")
-  colunasTabelaNome: !expr c("Produto", "Cobertura")
-  tabela1: "premioVI"
-  tabela2: "sinistroVI"
-  colunasValorTabela1: !expr c("PremioEmitido", "PremioGanhoCorrigido", "ComissaoGanha")
-  colunasValorNomeTabela1: !expr c("Prêmio emitido", "Prêmio ganho", "Comissão ganha")
-  formatosValorTabela1: !expr c("number", "number", "number")
-  colunasValorTabela2: !expr c("SinistroComER")
-  colunasValorNomeTabela2: !expr c("Sinistro com ER")
-  formatosValorTabela2: !expr c("number")
+  con: !expr DBI::dbConnect(RSQLite::SQLite(), "inst/penguins.sqlite")
+  colunasFiltro: !expr c("species", "island", "sex", "year","idade", "Flag")
+  colunasFiltroNome: !expr c("Species", "Island", "Sex", "Year", "Idade", "Flag")
+  colunasFiltroTipo: !expr c("picker", "picker", "picker", "dateRange", "slider", "checkBox")
+  colunasTabela: !expr c("species", "island", "sex", "year")
+  colunasTabelaNome: !expr c("Species", "Island", "Sex", "Year")
+  tabela1: "bill"
+  tabela2: "rest"
+  colunasValorTabela1: !expr c("bill_length_mm", "bill_depth_mm")
+  colunasValorNomeTabela1: !expr c("Bill length", "Bill depth")
+  formatosValorTabela1: !expr c("number", "number")
+  colunasValorTabela2: !expr c("flipper_length_mm", "body_mass_g")
+  colunasValorNomeTabela2: !expr c("Flipper length", "Body mass")
+  formatosValorTabela2: !expr c("number", "number")
 production:
   app_prod: yes
 dev:

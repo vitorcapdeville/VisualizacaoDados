@@ -85,7 +85,7 @@ genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_v
         individual = TRUE,
         checkIcon = list(
           yes = icon("check-square", lib = "font-awesome"),
-          no = icon("square-o", lib = "font-awesome")
+          no = icon("square", lib = "font-awesome")
         ),
         size = "xs",
         justified = F

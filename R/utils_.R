@@ -34,13 +34,13 @@ comparacao2 <- function(coluna_filtro, input, savedChoices) {
 #' @return uma lista com os valores default de cada filtro. picker exibe todos os valores unicos,
 #' dateRange e slider exibem o maximo e o minimo.
 #' @noRd
-get_default_values <- function(con, colunas_filtro, colunas_filtro_tipo){
+get_default_values <- function(con, colunas_filtro, colunas_filtro_tipo) {
   default_values <- list()
   for (i in colunas_filtro) {
     if (!DBI::dbExistsTable(con, glue::glue("{i}Id"))) stop("Tabela ", i, "Id nao encontrada.")
     default_values[[i]] <- DBI::dbGetQuery(con, glue::glue("select {i} from {i}Id")) %>% dplyr::pull()
   }
-
+  if (anyNA(default_values, recursive = T)) stop("NAs sao proibidos. Por favor troque por uma string vazia ou algo que faca sentido e nao seja NA.")
   which_slider <- which(colunas_filtro_tipo == "slider")
   which_date_ranger <- which(colunas_filtro_tipo == "dateRange")
 
@@ -52,8 +52,8 @@ get_default_values <- function(con, colunas_filtro, colunas_filtro_tipo){
   }
   for (i in which_date_ranger) {
     default_values[[i]] <- c(
-      min(default_values[[i]] %>% as.numeric() %>% as.Date("1970-01-01")),
-      max(default_values[[i]] %>% as.numeric() %>% as.Date("1970-01-01"))
+      min(default_values[[i]] %>% as.Date()),
+      max(default_values[[i]] %>% as.Date())
     )
   }
   return(default_values)
