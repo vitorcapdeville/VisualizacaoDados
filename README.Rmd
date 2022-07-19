@@ -67,8 +67,6 @@ library(VisualizacaoDados)
 
 -   Verificar como usar uma imagem fora de www no shiny.
 
--   Verificar por que a coluna q esta fixed no createDT esta vindo com o texto "-" ao inves de "Total" na soma.
-
 -   Verificar global assignment em app_global ou uma melhor forma de compartilhar valores em app_server e app_ui.
 
 

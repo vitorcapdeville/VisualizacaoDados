@@ -73,8 +73,8 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
 
       output$tabelaPadrao <- DT::renderDT({
         createDT(
-          preTable()$tabela, fixed, c(name1, name2), c(formats1, formats2),
-          widths, align, nrow(preTable()$tabela), footer
+          data = preTable()$tabela, fixed = fixed, cols = c(name1, name2), formats = c(formats1, formats2),
+          widths = widths, align = align, footer = footer
         )
       })
 

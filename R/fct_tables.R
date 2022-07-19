@@ -1,21 +1,3 @@
-formatReal <- function(x) {
-  paste("", format(sum(x), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = F), sep = "")
-}
-
-# Se der tempo, tentar incluir o total da página. ou
-# colocar todos os estipulantes na página e incluir barra de rolagem.
-sketch <- function(dados, cols, align = "left") {
-  htmltools::withTags(div(align = align, table(
-    DT::tableHeader(dados),
-    DT::tableFooter(sapply(dados, function(x) {
-      ifelse((is.numeric(x)),
-        formatReal(sum(x, na.rm = T)),
-        "Total"
-      )
-    }))
-  )))
-}
-
 #' Funcoes auxiliares para montar a query.
 #'
 #' @param col nome da coluna a ser sumarizada (sum(col))
@@ -97,39 +79,35 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
     )
   )
 
-  # for (i in group) {
-  #   data <- data %>%
-  #     dplyr::left_join(DBI::dbGetQuery(con, glue::glue("select * from {i}Id")), by = c(stats::setNames("Id", i))) %>%
-  #     dplyr::select(!glue::glue("{i}")) %>%
-  #     dplyr::rename(!!i := glue::glue("{i}.y")) %>%
-  #     dplyr::select(dplyr::all_of(group), dplyr::all_of(c(value1, value2)))
-  # }
-
   return(data)
 }
 
-createDT <- function(data, fixed = 1, cols, formats,
-                     widths = c("400px", "200px", "200px"),
-                     align = "left",
-                     pageLength = nrow(data), footer = T) {
+#' Cria objeto datatable
+#'
+#'
+#' @param data data.frame com os resultados da query
+#' @param fixed quantidade de colunas a esquerda que serao fixadas. So deve ser maior que
+#' 1 se tiverem mais de uma coluna de agrupamento. Nao pode ser menor que 1.
+#' @param cols nome das colunas de valor que constituirao o datatable
+#' @param formats formato das colunas de valor que irao compor o datatable
+#' @param widths widths das primeiras colunas
+#' @param align posicao para alinhar o datatable
+#' @param footer T ou F
+#'
+createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px", "200px"),
+                     align = "left", footer = T) {
   . <- NULL #Avoid R CMD Check notes
+  stopifnot(fixed >= 1)
   data <- as.data.frame(data)
-
-  if (nrow(data) > pageLength) {
-    dom <- "tp"
-  } else {
-    dom <- "t"
-  }
 
   soma1 <- which(names(data) %in% cols[formats == "number"]) - 1
   traco <- which(names(data) %in% cols[formats == "perc"]) - 1
   total <- seq(fixed) - 1
-
   if (footer) {
     javascript <- DT::JS(
       js_op_aux("start", align = align),
       js_op(total, operation = "custom", txt = "Total"),
-      js_op(traco, operation = "custom", txt = "-"),
+      ifelse(length(traco) > 0, js_op(traco, operation = "custom", txt = "-"), ""),
       js_op(soma1, operation = "sum", txt = ""),
       js_op_aux("end", align = align)
     )
@@ -143,12 +121,12 @@ createDT <- function(data, fixed = 1, cols, formats,
     extensions = c("FixedColumns", "ColReorder"),
     options = list(
       "autoWidth" = TRUE,
-      "pageLength" = pageLength,
+      "pageLength" = nrow(data),
       "scrollY" = "400px",
       "scrollCollapse" = T,
       "scrollX" = TRUE,
       "searching" = FALSE,
-      "dom" = dom,
+      "dom" = "t",
       "fixedColumns" = list(leftColumns = fixed),
       "columnDefs" = list(
         list(width = widths[3], visible = T, targets = seq(2, ncol(data) - 1)),
@@ -166,4 +144,20 @@ createDT <- function(data, fixed = 1, cols, formats,
     {
       if (length(formats[formats == "perc"]) > 0) DT::formatPercentage(., cols[formats == "perc"], digits = 2, mark = ".", dec.mark = ",") else .
     }
+}
+
+formatReal <- function(x) {
+  paste("", format(sum(x), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = F), sep = "")
+}
+
+sketch <- function(dados, cols, align = "left") {
+  htmltools::withTags(div(align = align, table(
+    DT::tableHeader(dados),
+    DT::tableFooter(sapply(dados, function(x) {
+      ifelse((is.numeric(x)),
+             formatReal(sum(x, na.rm = T)),
+             "Total"
+      )
+    }))
+  )))
 }

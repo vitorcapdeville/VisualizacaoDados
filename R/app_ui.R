@@ -5,7 +5,7 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  header <- shinydashboard::dashboardHeader(title = "Sinistralidade SICOOB")
+  header <- shinydashboard::dashboardHeader(title = configs$title_header)
 
   sidebar <- shinydashboard::dashboardSidebar(
     collapsed = TRUE,

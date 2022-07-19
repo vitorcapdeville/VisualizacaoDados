@@ -18,6 +18,4 @@ app_global <- function() {
   formatosValorTabela2 <<- configs$formatosValorTabela2
   defaultValues <<- get_default_values(con = con, colunas_filtro = colunasFiltro, colunas_filtro_tipo = colunasFiltroTipo)
 
-
-  defaultValues <<- get_default_values(con = con, colunas_filtro = colunasFiltro, colunas_filtro_tipo = colunasFiltroTipo)
 }

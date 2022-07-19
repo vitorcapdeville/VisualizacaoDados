@@ -16,6 +16,8 @@ default:
   colunasValorTabela2: !expr c("flipper_length_mm", "body_mass_g")
   colunasValorNomeTabela2: !expr c("Flipper length", "Body mass")
   formatosValorTabela2: !expr c("number", "number")
+  nome_pagina: "Example APP"
+  title_header: "APP"
 production:
   app_prod: yes
 dev:
