@@ -26,10 +26,23 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_create_table_ui <- function(id, nome) {
+mod_create_table_ui <- function(id, nome, value1, value2, name1, name2) {
   ns <- NS(id)
 
-  tabPanel(title = strong(nome), value = ns("tabelaPadraoBox"),shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))))
+  tabPanel(
+    title = strong(nome),
+    value = ns("tabelaPadraoBox"),
+    fluidRow(
+      column(11, shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao")))),
+      column(
+        1,
+        div(
+          align = "right",
+          uiOutput(ns("tabelaFiltros"))
+        )
+      )
+    )
+  )
 }
 #' create_table Server Functions
 #'
@@ -41,6 +54,7 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
     id,
     function(input, output, session) {
 
+      # Tras os dados do SQL
       preTable <- reactive({
         tabela = query_padrao(
           con = con,
@@ -56,23 +70,77 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
         list(tabela = tabela)
       })
 
-      output$tabelaPadrao <- DT::renderDT({
-        createDT(
-          data = preTable()$tabela, fixed = fixed, cols = c(name1, name2), formats = c(formats1, formats2),
-          widths = widths, align = align, footer = footer, tableId = id
+      output$tabelaFiltros <- renderUI({
+        # Esse render UI evita q eu precise criar os rangeInputs vazios
+        # e depois preencher com o update. Isso tava me causando problema com o estado inicial.
+        # Assim eu ja crio eles populados e consigo garantir que a primeira execucao do createDT
+        # sera baseada nos valores populados desses filtros, que devem ser a base completa.
+        ns <- session$ns
+        dados = preTable()$tabela
+        dados[is.na(dados)] <- 0
+        dados[dados == Inf | dados == -Inf] <- 0
+
+        ids = c(value1, value2)
+
+        cols = dados %>% dplyr::select(all_of(c(name1, name2)))
+        min_max = purrr::map(cols, function(x) c(floor(min(x,na.rm = T)), ceiling(max(x, na.rm = T))))
+
+        tagList(
+          shinyWidgets::dropdown(
+            div(align = "center",
+                downloadButton(ns("tabelaPadraoDownload"), "Download"),
+                hr(),
+                purrr::pmap(
+                  list(c(value1, value2), c(name1, name2), min_max),
+                  ~shinyWidgets::numericRangeInput(ns(..1), ..2, value = ..3, width = "90%", separator = " at\u00E9 ")
+                )
+            ),
+            size = "md",icon = icon("gear", verify_fa = F), right = T, width = "400px"
+          )
         )
       })
 
-      # output$tabelaPadraoDownload <- downloadHandler(
-      #   filename = function() {
-      #     glue::glue("Resultado por {toString(group)}.xlsx")
-      #   },
-      #   content = function(file) {
-      #     dados = preTable()$tabela
-      #     dados[is.na(dados)] = 0
-      #     openxlsx::write.xlsx(dados, file, row.names = F)
-      #   }
-      # )
+      output$tabelaPadrao <- DT::renderDT({
+        # lidando com os filtros dessa forma, eu consigo criar dependencia so nos exatos inputs q eu preciso,
+        # isto e, aqueles criados com o renderUI acima.
+        filtros = purrr::map(c(value1, value2), ~`[[`(input, .x))
+        names(filtros) = c(value1, value2)
+        # Esse req evita q ele tente criar o DT antes de renderizar os filtros.
+        req(filtros[[1]])
+
+        dados = preTable()$tabela
+        ids = c(value1, value2)
+        col_names <- c(name1, name2)
+
+        dados <- dados %>%
+          dplyr::filter((dplyr::if_all(col_names, ~dplyr::between(.x, filtros[[ids[col_names == dplyr::cur_column()]]][1], filtros[[ids[col_names == dplyr::cur_column()]]][2]))))
+
+        createDT(
+          data = dados, fixed = fixed, cols = c(name1, name2), formats = c(formats1, formats2),
+          widths = widths, align = align, footer = footer
+        )
+      })
+
+
+      output$tabelaPadraoDownload <- downloadHandler(
+        filename = function() {
+          glue::glue("Resultado por {toString(group)}.xlsx")
+        },
+        content = function(file) {
+          # Aqui eu me pergunto se o melhor seria baixar o arquivo com os filtros de tabela
+          # isto e, os filtros de valor, ou se devo usar so os filtros principais.
+          # Talvez incluir um checkbox pra voce marcar se quiser filtrado?
+          dados = preTable()$tabela
+          dados[is.na(dados)] = 0
+          wb <- openxlsx::createWorkbook()
+
+          openxlsx::addWorksheet(wb, glue::glue("Resultado por {toString(group)}"))
+          openxlsx::writeData(wb, 1, dados, startRow = 3, startCol = 1)
+          openxlsx::writeData(wb, 1, filtro()$filtro, startRow = 1, startCol = 1, colNames = F, rowNames = F)
+
+          openxlsx::saveWorkbook(wb, file)
+        }
+      )
 
       return(preTable)
     }

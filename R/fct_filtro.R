@@ -8,6 +8,7 @@
 #' @param coluna_filtro_tipo uma unica string dizendo qual é o tipo de filtro desta coluna.
 #' @param saved_choice escolhas atualmente salvas para essa coluna
 #' @param default_value valores padrao para esta coluna.
+#' @param con conexao com o sql, apenas para validar o glue_sql.
 #'
 #' @return The return value, if any, from executing the function.
 #'

@@ -43,8 +43,14 @@ library(VisualizacaoDados)
 
 ### Correções
 
--   Ajustar download pra ja vir formatado com xlsx e pra exibir os
-    filtros ativos tb.
+-   Inclui os filtros, top, mas preciso de alguma forma de avisar ao
+    usuario que ele tem algum filtro ativo.
+
+-   Ajustar download pra ja vir formatado.
+
+-   Dar um jeito de proibir o download enquanto a tabela nao esta
+    disponivel. Na verdade, dar um jeito de bloquear todos os botoes
+    enquanto a tabela nao esta disponivel.
 
 -   Testar se o filtro baseado em uma das tabelas da certo no full join
     quando tem entrada em uma das tabelas e nao tem na outra. Exemplo:
@@ -56,9 +62,6 @@ library(VisualizacaoDados)
     separadas é que uma delas geralmente é muito menor, entao em tese
     juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
     varias linhas da segunda tabela.
-
--   Incluir a documentação e reescrever as funções de forma mais
-    intuitiva.
 
 -   Verificar a possibilidade de sobrescrever as opções definidas em
     “golem-config.yml” usando os parametros do run_app().

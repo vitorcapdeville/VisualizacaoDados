@@ -16,19 +16,20 @@ Imports:
     DBI,
     dplyr,
     DT,
+    fresh,
     glue,
     golem (>= 0.3.3),
     htmltools,
     lubridate,
     magrittr,
+    openxlsx,
     purrr,
     shiny (>= 1.7.1),
     shinycssloaders,
     shinydashboard,
     shinyjs,
     shinyWidgets,
-    stringr,
-    fresh
+    stringr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

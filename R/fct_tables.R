@@ -95,8 +95,9 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
 #' @param align posicao para alinhar o datatable
 #' @param footer T ou F
 #'
+#' @noRd
 createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px", "200px"),
-                     align = "left", footer = T, pageLength = 10, tableId = NULL) {
+                     align = "left", footer = T, pageLength = 10) {
   . <- NULL # Avoid R CMD Check notes
   stopifnot(fixed >= 1)
   data <- as.data.frame(data)
@@ -109,7 +110,7 @@ createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px"
   DT::datatable(data,
     container = sketch(data, tipo, align = "left"),
     rownames = F,
-    extensions = c("FixedColumns", "ColReorder"),
+    extensions = c("FixedColumns"),
     height = 600,
     options = list(
       "autoWidth" = TRUE,
