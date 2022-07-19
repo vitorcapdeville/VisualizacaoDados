@@ -6,8 +6,8 @@ default:
   colunasFiltro: !expr c("species", "island", "sex", "year","idade", "Flag")
   colunasFiltroNome: !expr c("Species", "Island", "Sex", "Year", "Idade", "Flag")
   colunasFiltroTipo: !expr c("picker", "picker", "picker", "dateRange", "slider", "checkBox")
-  colunasTabela: !expr c("species", "island", "sex", "year")
-  colunasTabelaNome: !expr c("Species", "Island", "Sex", "Year")
+  colunasTabela: !expr c("Id","species", "island", "sex", "year")
+  colunasTabelaNome: !expr c("Long table","Species", "Island", "Sex", "Year")
   tabela1: "bill"
   tabela2: "rest"
   colunasValorTabela1: !expr c("bill_length_mm", "bill_depth_mm")

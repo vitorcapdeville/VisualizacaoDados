@@ -30,21 +30,6 @@ mod_create_table_ui <- function(id, nome) {
   ns <- NS(id)
 
   tabPanel(title = strong(nome), value = ns("tabelaPadraoBox"),shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))))
-
-  # shinydashboard::box(
-  #   title = strong(nome),
-  #   id = ns("tabelaPadraoBox"),
-  #   collapsible = TRUE,
-  #   collapsed = T,
-  #   closable = F,
-  #   shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
-  #   width = 12
-  #   # ,
-  #   # dropdownMenu = shinydashboardPlus::boxDropdown(shinydashboardPlus::boxDropdownItem(
-  #   #   downloadButton(ns("tabelaPadraoDownload"), "Download"),
-  #   #   id = ns("tabelaPadraoDownload2")
-  #   # ))
-  # )
 }
 #' create_table Server Functions
 #'
@@ -74,7 +59,7 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
       output$tabelaPadrao <- DT::renderDT({
         createDT(
           data = preTable()$tabela, fixed = fixed, cols = c(name1, name2), formats = c(formats1, formats2),
-          widths = widths, align = align, footer = footer
+          widths = widths, align = align, footer = footer, tableId = id
         )
       })
 

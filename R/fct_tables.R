@@ -1,4 +1,5 @@
 #' Funcoes auxiliares para montar a query.
+#'#' Funcoe#' Funcoes auxiliares para montar a query.
 #'
 #' @param col nome da coluna a ser sumarizada (sum(col))
 #' @param name nome da coluna final (as name)
@@ -6,10 +7,10 @@
 #'
 #' @return string com a construcao para auxiliar na query.
 #' @noRd
-sum_as <- function(col, name, con){
+sum_as <- function(col, name, con) {
   glue::glue_sql_collapse(glue::glue_sql("sum({`col`}) as {`name`}", .con = con), sep = ", ")
 }
-join_on <- function(group, con){
+join_on <- function(group, con) {
   glue::glue_sql_collapse(glue::glue_sql("t1.{`group`} = t2.{`group`}", .con = con), sep = " and ")
 }
 
@@ -43,30 +44,30 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
 
   chaves_join <- join_on(group, con)
 
-  group1 = purrr::map(group,~DBI::Id(table = table1, column = .x))
-  group2 = purrr::map(group,~DBI::Id(table = table2, column = .x))
-  if (length(group1) == 1) group1 = group1[[1]]
-  if (length(group2) == 1) group2 = group2[[1]]
+  group1 <- purrr::map(group, ~ DBI::Id(table = table1, column = .x))
+  group2 <- purrr::map(group, ~ DBI::Id(table = table2, column = .x))
+  if (length(group1) == 1) group1 <- group1[[1]]
+  if (length(group2) == 1) group2 <- group2[[1]]
 
-  subquery1 = glue::glue_sql(
-    "select {`group1`*},",sumarizacao1,"\n",
+  subquery1 <- glue::glue_sql(
+    "select {`group1`*},", sumarizacao1, "\n",
     "from {`table1`}\n",
-    filtro,"\n",
+    filtro, "\n",
     "group by {`group1`*}",
     .con = con
   )
-  subquery2 = glue::glue_sql(
-    "select {`group2`*},",sumarizacao2,"\n",
+  subquery2 <- glue::glue_sql(
+    "select {`group2`*},", sumarizacao2, "\n",
     "from {`table2`}\n",
-    filtro,"\n",
+    filtro, "\n",
     "group by {`group2`*}",
     .con = con
   )
 
-  cols = c(
-    purrr::map(group,~DBI::Id(table = "t1", column = .x)),
-    purrr::map(name1, ~DBI::Id(table = "t1", column = .x)),
-    purrr::map(name2, ~DBI::Id(table = "t2", column = .x))
+  cols <- c(
+    purrr::map(group, ~ DBI::Id(table = "t1", column = .x)),
+    purrr::map(name1, ~ DBI::Id(table = "t1", column = .x)),
+    purrr::map(name2, ~ DBI::Id(table = "t2", column = .x))
   )
   data <- DBI::dbGetQuery(
     con,
@@ -95,38 +96,29 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
 #' @param footer T ou F
 #'
 createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px", "200px"),
-                     align = "left", footer = T) {
-  . <- NULL #Avoid R CMD Check notes
+                     align = "left", footer = T, pageLength = 10, tableId = NULL) {
+  . <- NULL # Avoid R CMD Check notes
   stopifnot(fixed >= 1)
   data <- as.data.frame(data)
 
-  soma1 <- which(names(data) %in% cols[formats == "number"]) - 1
-  traco <- which(names(data) %in% cols[formats == "perc"]) - 1
-  total <- seq(fixed) - 1
-  if (footer) {
-    javascript <- DT::JS(
-      js_op_aux("start", align = align),
-      js_op(total, operation = "custom", txt = "Total"),
-      ifelse(length(traco) > 0, js_op(traco, operation = "custom", txt = "-"), ""),
-      js_op(soma1, operation = "sum", txt = ""),
-      js_op_aux("end", align = align)
-    )
-  } else {
-    javascript <- NA
-  }
-
+  tipo <- names(data)
+  tipo[which(names(data) %in% cols[formats == "number"])] <- "number"
+  tipo[which(names(data) %in% cols[formats == "perc"])] <- "perc"
+  tipo[which(!names(data) %in% cols)] <- "-"
+  tipo[1] <- "Total"
   DT::datatable(data,
-    container = js_op_aux("sketch", data, align = align),
+    container = sketch(data, tipo, align = "left"),
     rownames = F,
     extensions = c("FixedColumns", "ColReorder"),
+    height = 600,
     options = list(
       "autoWidth" = TRUE,
-      "pageLength" = nrow(data),
-      "scrollY" = "400px",
-      "scrollCollapse" = T,
+      "pageLength" = pageLength,
+      # "scrollY" = "400px",
+      # "scrollCollapse" = F,
       "scrollX" = TRUE,
       "searching" = FALSE,
-      "dom" = "t",
+      "dom" = "tp",
       "fixedColumns" = list(leftColumns = fixed),
       "columnDefs" = list(
         list(width = widths[3], visible = T, targets = seq(2, ncol(data) - 1)),
@@ -135,7 +127,14 @@ createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px"
         list(className = "dt-center", targets = "_all"),
         list(targets = "_all", visible = FALSE)
       ),
-      footerCallback = javascript
+      "drawCallback" = DT::JS(glue::glue("function() {
+          var api = this.api();
+          var rowCount = api.rows({page: 'current'}).count();
+
+          for (var i = 0; i < api.page.len() - (rowCount === 0? 1 : rowCount); i++) {
+            $('#' + api.table().node().id + ' tbody').append($('<tr ><td>&nbsp;</td>[paste0(rep('<td></td>', ncol(data) - 1), collapse = '')]</tr>'));
+          }
+        }", .open = "[", .close = "]"))
     )
   ) %>%
     {
@@ -147,17 +146,29 @@ createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px"
 }
 
 formatReal <- function(x) {
-  paste("", format(sum(x), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = F), sep = "")
+  paste("", format(x, big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = F), sep = "")
 }
 
-sketch <- function(dados, cols, align = "left") {
+#' Funcao para calcular o footer.
+#'
+#' @param x um vetor
+#' @param tipo se number, retorna a soma de x. se perc, retorna -. Caso contrario retorna tipo.
+#'
+#' @noRd
+calcula_footer <- function(x, tipo) {
+  if (tipo == "number") {
+    ret <- formatReal(sum(x))
+  } else if (tipo == "perc") {
+    ret <- "-"
+  } else {
+    ret <- tipo
+  }
+  return(ret)
+}
+
+sketch <- function(dados, tipos, align = "left") {
   htmltools::withTags(div(align = align, table(
     DT::tableHeader(dados),
-    DT::tableFooter(sapply(dados, function(x) {
-      ifelse((is.numeric(x)),
-             formatReal(sum(x, na.rm = T)),
-             "Total"
-      )
-    }))
+    DT::tableFooter(purrr::map2(dados, tipos, ~ calcula_footer(x = .x, tipo = .y)))
   )))
 }

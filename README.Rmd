@@ -51,15 +51,11 @@ library(VisualizacaoDados)
 
 ### Correções
 
--   Total das tabelas: achar forma de botar o total por coluna sem ter q exibir todas as linhas
-
 -   Ajustar download pra ja vir formatado com xlsx e pra exibir os filtros ativos tb.
 
 -   Testar se o filtro baseado em uma das tabelas da certo no full join quando tem entrada em uma das tabelas e nao tem na outra. Exemplo: t1 full join t2. Tem valor na t2, mas nao tem na t1. Eu coloco o filtro em t1. O que acontece?
 
 -   Verificar se é mais eficiente juntar as duas tabelas em uma tabela só, ou deixar duas tabelas separadas. A ideia de duas tabelas separadas é que uma delas geralmente é muito menor, entao em tese juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em varias linhas da segunda tabela.
-
--   Incluir dados de exemplo, usar pinguins.
 
 -   Incluir a documentação e reescrever as funções de forma mais intuitiva.
 
@@ -68,7 +64,6 @@ library(VisualizacaoDados)
 -   Verificar como usar uma imagem fora de www no shiny.
 
 -   Verificar global assignment em app_global ou uma melhor forma de compartilhar valores em app_server e app_ui.
-
 
 ## Code of Conduct
 

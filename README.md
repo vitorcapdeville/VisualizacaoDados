@@ -43,9 +43,6 @@ library(VisualizacaoDados)
 
 ### Correções
 
--   Total das tabelas: achar forma de botar o total por coluna sem ter q
-    exibir todas as linhas
-
 -   Ajustar download pra ja vir formatado com xlsx e pra exibir os
     filtros ativos tb.
 
@@ -59,8 +56,6 @@ library(VisualizacaoDados)
     separadas é que uma delas geralmente é muito menor, entao em tese
     juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
     varias linhas da segunda tabela.
-
--   Incluir dados de exemplo, usar pinguins.
 
 -   Incluir a documentação e reescrever as funções de forma mais
     intuitiva.

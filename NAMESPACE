@@ -2,7 +2,6 @@
 
 export("%>%")
 export(formata_dados)
-export(js_op)
 export(run_app)
 import(shiny)
 importFrom(data.table,":=")

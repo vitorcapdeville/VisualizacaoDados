@@ -34,7 +34,7 @@ app_ui <- function(request) {
           width = 12,
           mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 3, estruturaPadrao, defaultValues, colunasFiltroTipo, 1)
         ),
-        do.call(shinydashboard::tabBox, c(list(title = "", id = "tabset1", width = 12),purrr::map2(colunasTabela, colunasTabelaNome, mod_create_table_ui)))
+        do.call(shinydashboard::tabBox, c(list(title = "", id = "tabset1", width = 12, height = "600px"),purrr::map2(colunasTabela, colunasTabelaNome, mod_create_table_ui)))
       )
     )
   )

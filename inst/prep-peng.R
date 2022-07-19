@@ -13,9 +13,8 @@
 # tabela2 = "rest"
 #
 # # Colunas exploratorias
-# colunasExp = c("species", "island", "sex", "year","idade", "Flag")
-# colunasExpNome = c("Espécies", "Ilha", "Sexo", "Ano", "Idade", "Flag")
-# colunasExpTipo = c("picker", "picker", "picker", "dateRange", "slider", "checkBox")
+# colunasExp = c("Id","species", "island", "sex", "year","idade", "Flag")
+# colunasExpNome = c("Long table","Espécies", "Ilha", "Sexo", "Ano", "Idade", "Flag")
 # # Colunas de valor
 # colunasValor1 = c("bill_length_mm", "bill_depth_mm")
 # colunasValor2 = c("flipper_length_mm", "body_mass_g")
@@ -28,15 +27,16 @@
 #   mutate(sex = as.character(sex)) %>%
 #   mutate(across(where(is.factor), as.character)) %>%
 #   mutate(across(where(is.numeric), ~ifelse(is.na(.x), 0, .x))) %>%
-#   mutate(across(!where(is.numeric), ~ifelse(is.na(.x), "", .x)))
+#   mutate(across(!where(is.numeric), ~ifelse(is.na(.x), "", .x))) %>%
+#   mutate(Id = row_number())
 #
 # # Separar em dois conjuntos (premio e sinistro, por exemplo)
 # bill = penguins1 %>%
-#   select(species, island, sex, year, idade, Flag, bill_length_mm, bill_depth_mm) %>%
+#   select(all_of(c(colunasExp, colunasValor1))) %>%
 #   as.data.table()
 #
 # rest = penguins1 %>%
-#   select(species, island, sex, year, idade, Flag, flipper_length_mm, body_mass_g) %>%
+#   select(all_of(c(colunasExp, colunasValor2))) %>%
 #   as.data.table()
 #
 #
