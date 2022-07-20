@@ -45,6 +45,9 @@ library(VisualizacaoDados)
 
 ### Correções
 
+-   Tentar usar o proxy e o replaceData do DT para evitar recriar a
+    tabela toda quando mudar o filtro.
+
 -   Inclui os filtros, top, mas preciso de alguma forma de avisar ao
     usuario que ele tem algum filtro ativo.
 

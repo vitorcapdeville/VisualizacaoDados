@@ -28,13 +28,18 @@ app_server <- function(input, output, session) {
     }
     list(filtro = filtro)
   })
-  purrr::map2(
-    colunasTabela, colunasTabela, mod_create_table_server, con,
-    colunasValorTabela1, colunasValorTabela2,
-    colunasValorNomeTabela1, colunasValorNomeTabela2,
-    formatosValorTabela1, formatosValorTabela2,
-    tabela1, tabela2, dados_filt, colunasTransformadas, colunasTransformadasNome,
-    formatosTransformadas, fixed = 1, widths = c("200px", "120px", "120px")
+
+  purrr::pmap(
+    list(colunasTabela, colunasTabela),
+    ~mod_create_table_server(
+      id = ..1, group = ..2, con = con,
+      value1 = colunasValorTabela1, value2 = colunasValorTabela2,
+      name1 = colunasValorNomeTabela1, name2 = colunasValorNomeTabela2,
+      formats1 = formatosValorTabela1, formats2 = formatosValorTabela2,
+      table1 = tabela1, table2 = tabela2, filtro = dados_filt, colunas_transformadas = colunasTransformadas,
+      colunas_transformadas_nome = colunasTransformadasNome,formato_colunas_transformadas = formatosTransformadas,
+      fixed = 1, widths = c("200px", "120px", "120px")
+    )
   )
 
   if (!interactive()) {

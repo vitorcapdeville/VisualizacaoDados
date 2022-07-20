@@ -31,7 +31,7 @@ mod_create_table_ui <- function(id, nome, value1, value2, name1, name2) {
 
   tabPanel(
     title = strong(nome),
-    value = ns("tabelaPadraoBox"),
+    value = nome,
     fluidRow(
       column(11, shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao")))),
       column(
@@ -76,7 +76,7 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
         tabela <- purrr::reduce2(
           .x = colunas_transformadas,
           .y = colunas_transformadas_nome,
-          ~..1 %>% mutate("{..3}" := eval(parse(text = ..2))),
+          ~dplyr::mutate(..1, "{..3}" := eval(parse(text = ..2))),
           .init = tabela
         )
         # Remove coisas q podem causas problemas no filtro.
@@ -99,11 +99,11 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
           shinyWidgets::dropdown(
             div(align = "center",
                 downloadButton(ns("tabelaPadraoDownload"), "Download"),
-                hr(),
-                purrr::pmap(
-                  list(ids, col_names, min_max),
-                  ~shinyWidgets::numericRangeInput(ns(..1), ..2, value = ..3, width = "90%", separator = " at\u00E9 ")
-                )
+                # hr(),
+                # purrr::pmap(
+                #   list(ids, col_names, min_max),
+                #   ~shinyWidgets::numericRangeInput(ns(..1), ..2, value = ..3, width = "90%", separator = " at\u00E9 ")
+                # )
             ),
             size = "md",icon = icon("gear", verify_fa = F), right = T, width = "400px"
           )
@@ -113,17 +113,17 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
       output$tabelaPadrao <- DT::renderDT({
         # lidando com os filtros dessa forma, eu consigo criar dependencia so nos exatos inputs q eu preciso,
         # isto e, aqueles criados com o renderUI acima.
-        filtros = purrr::map(ids, ~`[[`(input, .x))
-        names(filtros) = ids
-        # Esse req evita q ele tente criar o DT antes de renderizar os filtros.
-        req(filtros[[1]])
+        # filtros = purrr::map(ids, ~`[[`(input, .x))
+        # names(filtros) = ids
+        # # Esse req evita q ele tente criar o DT antes de renderizar os filtros.
+        # req(filtros[[1]])
 
         dados = preTable()$tabela
         # ids = c(value1, value2)
         # col_names <- c(name1, name2)
         # Aplica os filtros de tabela
-        dados <- dados %>%
-          dplyr::filter((dplyr::if_all(col_names, ~dplyr::between(.x, filtros[[ids[col_names == dplyr::cur_column()]]][1], filtros[[ids[col_names == dplyr::cur_column()]]][2]))))
+        # dados <- dados %>%
+        #   dplyr::filter((dplyr::if_all(col_names, ~dplyr::between(.x, filtros[[ids[col_names == dplyr::cur_column()]]][1], filtros[[ids[col_names == dplyr::cur_column()]]][2]))))
 
         createDT(
           data = dados, fixed = fixed, cols = col_names,

@@ -111,15 +111,13 @@ createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px"
     container = sketch(data, tipo, align = "left"),
     rownames = F,
     extensions = c("FixedColumns"),
+    filter = "top",
     height = 600,
     options = list(
       "autoWidth" = TRUE,
       "pageLength" = pageLength,
-      # "scrollY" = "400px",
-      # "scrollCollapse" = F,
       "scrollX" = TRUE,
-      "searching" = FALSE,
-      "dom" = "tp",
+      "dom" = "tip",
       "fixedColumns" = list(leftColumns = fixed),
       "columnDefs" = list(
         list(width = widths[3], visible = T, targets = seq(2, ncol(data) - 1)),
