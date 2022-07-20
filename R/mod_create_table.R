@@ -47,9 +47,9 @@ mod_create_table_ui <- function(id, nome, value1, value2, name1, name2) {
 #' create_table Server Functions
 #'
 #' @noRd
-mod_create_table_server <- function(id, group, con, value1, value2, name1, name2, formats1, formats2, table1, table2, filtro,
+mod_create_table_server <- function(id, group, group_name, con, value1, value2, name1, name2, formats1, formats2, table1, table2, filtro,
                                     colunas_transformadas, colunas_transformadas_nome,formato_colunas_transformadas,
-                                    fixed = 1, widths = c("400px","200px","200px"), align = "left", footer = T) {
+                                    fixed = 1, widths = c("400px","200px","200px"), align = "left", footer = T, current_tab = NULL) {
   stopifnot(is.reactive(filtro))
   moduleServer(
     id,
@@ -60,6 +60,8 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
 
       # Tras os dados do SQL, com as colunas iniciais
       preTable <- reactive({
+        # Isso evita rodar esse reactive para as tabs q nao estao abertas no momento
+        req(current_tab() == group_name)
         tabela = query_padrao(
           con = con,
           group = group,
@@ -93,8 +95,8 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
         ns <- session$ns
         dados = preTable()$tabela
 
-        cols = dados %>% dplyr::select(dplyr::all_of(col_names))
-        min_max = purrr::map(cols, function(x) c(floor(min(x,na.rm = T)*100)/100, ceiling(max(x, na.rm = T)*100)/100))
+        # cols = dados %>% dplyr::select(dplyr::all_of(col_names))
+        # min_max = purrr::map(cols, function(x) c(floor(min(x,na.rm = T)*100)/100, ceiling(max(x, na.rm = T)*100)/100))
         tagList(
           shinyWidgets::dropdown(
             div(align = "center",
@@ -118,18 +120,25 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
         # # Esse req evita q ele tente criar o DT antes de renderizar os filtros.
         # req(filtros[[1]])
 
-        dados = preTable()$tabela
+        dados = isolate(preTable()$tabela)
         # ids = c(value1, value2)
         # col_names <- c(name1, name2)
         # Aplica os filtros de tabela
         # dados <- dados %>%
         #   dplyr::filter((dplyr::if_all(col_names, ~dplyr::between(.x, filtros[[ids[col_names == dplyr::cur_column()]]][1], filtros[[ids[col_names == dplyr::cur_column()]]][2]))))
-
         createDT(
           data = dados, fixed = fixed, cols = col_names,
           formats = c(formats1, formats2,formato_colunas_transformadas),
           widths = widths, align = align, footer = footer
         )
+      })
+
+      proxy <- DT::dataTableProxy('tabelaPadrao', deferUntilFlush = F)
+      observe({
+        # Isso evita rodar esse observe para as tabs q nao estao abertas no momento
+        req(current_tab() == group_name)
+        dados = preTable()$tabela
+        DT::replaceData(proxy, data = dados, rownames = F)
       })
 
 

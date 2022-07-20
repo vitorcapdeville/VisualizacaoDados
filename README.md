@@ -45,8 +45,11 @@ library(VisualizacaoDados)
 
 ### Correções
 
--   Tentar usar o proxy e o replaceData do DT para evitar recriar a
-    tabela toda quando mudar o filtro.
+-   Estou usando o proxy, isso significa q quando o filtro muda, ele nao
+    mostra o loading na tabela, e mantem tudo q eu ja filtrei e etc. Me
+    parece mais clean, mas eu preciso de um aviso pra bloquear a
+    interação com o APP enquanto o filtro estiver rodando, talvez um
+    sweet alert.
 
 -   Inclui os filtros, top, mas preciso de alguma forma de avisar ao
     usuario que ele tem algum filtro ativo.

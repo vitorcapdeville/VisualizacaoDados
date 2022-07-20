@@ -29,16 +29,22 @@ app_server <- function(input, output, session) {
     list(filtro = filtro)
   })
 
+  # Save current value of tabset to pass do create table module
+  current_tabset <- reactiveVal()
+  observe({
+    current_tabset(input$tabset1)
+  })
+
   purrr::pmap(
-    list(colunasTabela, colunasTabela),
+    list(colunasTabela, colunasTabela, colunasTabelaNome),
     ~mod_create_table_server(
-      id = ..1, group = ..2, con = con,
+      id = ..1, group = ..2, group_name = ..3, con = con,
       value1 = colunasValorTabela1, value2 = colunasValorTabela2,
       name1 = colunasValorNomeTabela1, name2 = colunasValorNomeTabela2,
       formats1 = formatosValorTabela1, formats2 = formatosValorTabela2,
       table1 = tabela1, table2 = tabela2, filtro = dados_filt, colunas_transformadas = colunasTransformadas,
       colunas_transformadas_nome = colunasTransformadasNome,formato_colunas_transformadas = formatosTransformadas,
-      fixed = 1, widths = c("200px", "120px", "120px")
+      fixed = 1, widths = c("200px", "120px", "120px"), current_tab = current_tabset
     )
   )
 
