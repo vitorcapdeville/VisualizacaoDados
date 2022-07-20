@@ -41,6 +41,8 @@ library(VisualizacaoDados)
 
 -   Estrutura de agravo
 
+-   incluir outputs q dependem apenas de uma das tabelas
+
 ### Correções
 
 -   Inclui os filtros, top, mas preciso de alguma forma de avisar ao
@@ -52,17 +54,6 @@ library(VisualizacaoDados)
     disponivel. Na verdade, dar um jeito de bloquear todos os botoes
     enquanto a tabela nao esta disponivel.
 
--   Testar se o filtro baseado em uma das tabelas da certo no full join
-    quando tem entrada em uma das tabelas e nao tem na outra. Exemplo:
-    t1 full join t2. Tem valor na t2, mas nao tem na t1. Eu coloco o
-    filtro em t1. O que acontece?
-
--   Verificar se é mais eficiente juntar as duas tabelas em uma tabela
-    só, ou deixar duas tabelas separadas. A ideia de duas tabelas
-    separadas é que uma delas geralmente é muito menor, entao em tese
-    juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
-    varias linhas da segunda tabela.
-
 -   Verificar a possibilidade de sobrescrever as opções definidas em
     “golem-config.yml” usando os parametros do run_app().
 
@@ -70,6 +61,17 @@ library(VisualizacaoDados)
 
 -   Verificar global assignment em app_global ou uma melhor forma de
     compartilhar valores em app_server e app_ui.
+
+-   Verificar se é mais eficiente juntar as duas tabelas em uma tabela
+    só, ou deixar duas tabelas separadas. A ideia de duas tabelas
+    separadas é que uma delas geralmente é muito menor, entao em tese
+    juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
+    varias linhas da segunda tabela.
+
+-   Testar se o filtro baseado em uma das tabelas da certo no full join
+    quando tem entrada em uma das tabelas e nao tem na outra. Exemplo:
+    t1 full join t2. Tem valor na t2, mas nao tem na t1. Eu coloco o
+    filtro em t1. O que acontece?
 
 ## Code of Conduct
 

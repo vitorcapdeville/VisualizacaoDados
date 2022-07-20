@@ -34,7 +34,7 @@ formata_dados <- function(con, tabela1, tabela2, nometabela1, nometabela2, colun
   }
 
   # Essas tabelas servem para extrair os valores default de todas as colunas de filtro.
-  id_tables <- map(colunas_exploratorias, ~ get_id(base_full, .x))
+  id_tables <- purrr::map(colunas_exploratorias, ~ get_id(base_full, .x))
   names(id_tables) <- paste0(colunas_exploratorias, "Id")
 
   tabela_1 <- list(tabela1)

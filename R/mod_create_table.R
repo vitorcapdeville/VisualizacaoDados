@@ -47,14 +47,18 @@ mod_create_table_ui <- function(id, nome, value1, value2, name1, name2) {
 #' create_table Server Functions
 #'
 #' @noRd
-mod_create_table_server <- function(id, group, con, value1, value2, name1, name2, formats1, formats2, table1, table2, filtro, fixed = 1,
-                                    widths = c("400px","200px","200px"), align = "left", footer = T) {
+mod_create_table_server <- function(id, group, con, value1, value2, name1, name2, formats1, formats2, table1, table2, filtro,
+                                    colunas_transformadas, colunas_transformadas_nome,formato_colunas_transformadas,
+                                    fixed = 1, widths = c("400px","200px","200px"), align = "left", footer = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
     id,
     function(input, output, session) {
+      # alguns auxiliares q vao ser precisos em diversos lugares mais p frente
+      ids = c(value1, value2,colunas_transformadas)
+      col_names = c(name1, name2, colunas_transformadas_nome)
 
-      # Tras os dados do SQL
+      # Tras os dados do SQL, com as colunas iniciais
       preTable <- reactive({
         tabela = query_padrao(
           con = con,
@@ -67,6 +71,17 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
           table2 = table2,
           filtro = filtro()$filtro
         )
+
+        # Adiciona as colunas que sao criadas pos agregacao.
+        tabela <- purrr::reduce2(
+          .x = colunas_transformadas,
+          .y = colunas_transformadas_nome,
+          ~..1 %>% mutate("{..3}" := eval(parse(text = ..2))),
+          .init = tabela
+        )
+        # Remove coisas q podem causas problemas no filtro.
+        tabela[is.na(tabela)] <- 0
+        tabela[tabela == Inf | tabela == -Inf] <- 0
         list(tabela = tabela)
       })
 
@@ -77,21 +92,16 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
         # sera baseada nos valores populados desses filtros, que devem ser a base completa.
         ns <- session$ns
         dados = preTable()$tabela
-        dados[is.na(dados)] <- 0
-        dados[dados == Inf | dados == -Inf] <- 0
 
-        ids = c(value1, value2)
-
-        cols = dados %>% dplyr::select(all_of(c(name1, name2)))
-        min_max = purrr::map(cols, function(x) c(floor(min(x,na.rm = T)), ceiling(max(x, na.rm = T))))
-
+        cols = dados %>% dplyr::select(dplyr::all_of(col_names))
+        min_max = purrr::map(cols, function(x) c(floor(min(x,na.rm = T)*100)/100, ceiling(max(x, na.rm = T)*100)/100))
         tagList(
           shinyWidgets::dropdown(
             div(align = "center",
                 downloadButton(ns("tabelaPadraoDownload"), "Download"),
                 hr(),
                 purrr::pmap(
-                  list(c(value1, value2), c(name1, name2), min_max),
+                  list(ids, col_names, min_max),
                   ~shinyWidgets::numericRangeInput(ns(..1), ..2, value = ..3, width = "90%", separator = " at\u00E9 ")
                 )
             ),
@@ -103,20 +113,21 @@ mod_create_table_server <- function(id, group, con, value1, value2, name1, name2
       output$tabelaPadrao <- DT::renderDT({
         # lidando com os filtros dessa forma, eu consigo criar dependencia so nos exatos inputs q eu preciso,
         # isto e, aqueles criados com o renderUI acima.
-        filtros = purrr::map(c(value1, value2), ~`[[`(input, .x))
-        names(filtros) = c(value1, value2)
+        filtros = purrr::map(ids, ~`[[`(input, .x))
+        names(filtros) = ids
         # Esse req evita q ele tente criar o DT antes de renderizar os filtros.
         req(filtros[[1]])
 
         dados = preTable()$tabela
-        ids = c(value1, value2)
-        col_names <- c(name1, name2)
-
+        # ids = c(value1, value2)
+        # col_names <- c(name1, name2)
+        # Aplica os filtros de tabela
         dados <- dados %>%
           dplyr::filter((dplyr::if_all(col_names, ~dplyr::between(.x, filtros[[ids[col_names == dplyr::cur_column()]]][1], filtros[[ids[col_names == dplyr::cur_column()]]][2]))))
 
         createDT(
-          data = dados, fixed = fixed, cols = c(name1, name2), formats = c(formats1, formats2),
+          data = dados, fixed = fixed, cols = col_names,
+          formats = c(formats1, formats2,formato_colunas_transformadas),
           widths = widths, align = align, footer = footer
         )
       })

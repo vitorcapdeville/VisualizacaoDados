@@ -33,8 +33,8 @@ app_server <- function(input, output, session) {
     colunasValorTabela1, colunasValorTabela2,
     colunasValorNomeTabela1, colunasValorNomeTabela2,
     formatosValorTabela1, formatosValorTabela2,
-    tabela1, tabela2,
-    dados_filt, fixed = 1, widths = c("200px", "120px", "120px")
+    tabela1, tabela2, dados_filt, colunasTransformadas, colunasTransformadasNome,
+    formatosTransformadas, fixed = 1, widths = c("200px", "120px", "120px")
   )
 
   if (!interactive()) {

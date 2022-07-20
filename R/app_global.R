@@ -16,6 +16,9 @@ app_global <- function() {
   colunasValorTabela2 <<- configs$colunasValorTabela2
   colunasValorNomeTabela2 <<- configs$colunasValorNomeTabela2
   formatosValorTabela2 <<- configs$formatosValorTabela2
+  colunasTransformadas <<- configs$colunasTransformadas
+  colunasTransformadasNome <<- configs$colunasTransformadasNome
+  formatosTransformadas <<- configs$formatosTransformadas
   defaultValues <<- get_default_values(con = con, colunas_filtro = colunasFiltro, colunas_filtro_tipo = colunasFiltroTipo)
 
 }

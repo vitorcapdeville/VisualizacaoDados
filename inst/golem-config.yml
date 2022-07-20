@@ -1,21 +1,32 @@
 default:
+  #golem configs
   golem_name: VisualizacaoDados
   golem_version: 0.0.0.9000
   app_prod: no
+  # Conexao com o sql. Nao precisa ser via SQLite
   con: !expr DBI::dbConnect(RSQLite::SQLite(), "inst/penguins.sqlite")
+  # Colunas que irao definir os filtros
   colunasFiltro: !expr c("species", "island", "sex", "year","idade", "Flag")
   colunasFiltroNome: !expr c("Species", "Island", "Sex", "Year", "Idade", "Flag")
   colunasFiltroTipo: !expr c("picker", "picker", "picker", "dateRange", "slider", "checkBox")
+  # Colunas que irao definir as tabelas a serem criadas. As tabelas irao agrupar pelas colunas
+  # que forem definidas aqui, podem ser escolhidas mais de 1 coluna como agrupamento
   colunasTabela: !expr list("Id","species", "island", "sex", c("year", "island"))
   colunasTabelaNome: !expr c("Long table","Species", "Island", "Sex", "Year")
+  # Nome das tabelas com os dados
   tabela1: "bill"
   tabela2: "rest"
+  # Colunas de valor que serao sumarizadas via soma.
   colunasValorTabela1: !expr c("bill_length_mm", "bill_depth_mm")
   colunasValorNomeTabela1: !expr c("Bill length", "Bill depth")
   formatosValorTabela1: !expr c("number", "number")
   colunasValorTabela2: !expr c("flipper_length_mm", "body_mass_g")
   colunasValorNomeTabela2: !expr c("Flipper length", "Body mass")
   formatosValorTabela2: !expr c("number", "number")
+  # Colunas a serem calculadas apos a summarizacao. Serao calculadas no R, apos o SQL ter rodado.
+  colunasTransformadas: !expr c("`Bill length`/`Flipper length`", "`Body mass`^2")
+  colunasTransformadasNome: !expr c("Bill/Flipper length", "bobody mass")
+  formatosTransformadas: !expr c("perc", "number")
   nome_pagina: "Example APP"
   title_header: "APP"
 production:
