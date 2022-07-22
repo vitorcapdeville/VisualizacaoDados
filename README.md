@@ -51,8 +51,14 @@ library(VisualizacaoDados)
     interação com o APP enquanto o filtro estiver rodando, talvez um
     sweet alert.
 
--   Inclui os filtros, top, mas preciso de alguma forma de avisar ao
-    usuario que ele tem algum filtro ativo.
+    -   Tirei o proxy por que ele nao atualiza o footer. Teria q volta
+        pra callback, mas o callback nao posso usar as paginas
+        rsrsrsrsrsrsrsrs
+
+-   Colocar CARDs com valores totais.
+
+-   Verificar se vale mudar para a tabela gerada com excelR. Precisaria
+    achar uma forma de incluir os filtros
 
 -   Ajustar download pra ja vir formatado.
 

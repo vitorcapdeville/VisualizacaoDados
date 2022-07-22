@@ -64,17 +64,26 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
     .con = con
   )
 
-  cols <- c(
+  cols1 <- c(
     purrr::map(group, ~ DBI::Id(table = "t1", column = .x)),
+    purrr::map(name1, ~ DBI::Id(table = "t1", column = .x)),
+    purrr::map(name2, ~ DBI::Id(table = "t2", column = .x))
+  )
+  cols2 <- c(
+    purrr::map(group, ~ DBI::Id(table = "t2", column = .x)),
     purrr::map(name1, ~ DBI::Id(table = "t1", column = .x)),
     purrr::map(name2, ~ DBI::Id(table = "t2", column = .x))
   )
   data <- DBI::dbGetQuery(
     con,
     glue::glue_sql(
-      "select {`cols`*}
+      "select {`cols1`*}
       from ({subquery1}) t1
-      join ({subquery2}) t2 on {chaves_join}
+      left join ({subquery2}) t2 on {chaves_join}
+      union all
+      select {`cols2`*}
+      from ({subquery2}) t2
+      left join ({subquery1}) t1 on {chaves_join}
       ",
       .con = con
     )

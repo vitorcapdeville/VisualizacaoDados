@@ -120,7 +120,8 @@ mod_create_table_server <- function(id, group, group_name, con, value1, value2, 
         # # Esse req evita q ele tente criar o DT antes de renderizar os filtros.
         # req(filtros[[1]])
 
-        dados = isolate(preTable()$tabela)
+        # dados = isolate(preTable()$tabela)
+        dados = preTable()$tabela
         # ids = c(value1, value2)
         # col_names <- c(name1, name2)
         # Aplica os filtros de tabela
@@ -133,13 +134,13 @@ mod_create_table_server <- function(id, group, group_name, con, value1, value2, 
         )
       })
 
-      proxy <- DT::dataTableProxy('tabelaPadrao', deferUntilFlush = F)
-      observe({
-        # Isso evita rodar esse observe para as tabs q nao estao abertas no momento
-        req(current_tab() == group_name)
-        dados = preTable()$tabela
-        DT::replaceData(proxy, data = dados, rownames = F)
-      })
+      # proxy <- DT::dataTableProxy('tabelaPadrao', deferUntilFlush = F)
+      # observe({
+      #   # Isso evita rodar esse observe para as tabs q nao estao abertas no momento
+      #   req(current_tab() == group_name)
+      #   dados = preTable()$tabela
+      #   DT::replaceData(proxy, data = dados, rownames = F)
+      # })
 
 
       output$tabelaPadraoDownload <- downloadHandler(
