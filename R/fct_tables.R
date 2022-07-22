@@ -32,22 +32,12 @@ join_on <- function(group, con) {
 #' @param filtro uma string contendo a clausula de where completa (incluindo o termo where). Essa string
 #' usualmente é criada com a funcao `criacao_filtro`.
 #'
-#' @return um data.frame com as colunas definidas em group, value1 e value2.
+#' @return a query em SQL para gerar a tabela.
 #' @noRd
-query_padrao <- function(con, group, value1, value2, name1, name2, table1, table2, filtro) {
-  stopifnot(length(filtro) == 1)
-  stopifnot(length(value1) == length(name1))
-  stopifnot(length(value2) == length(name2))
-
-  sumarizacao1 <- sum_as(value1, name1, con)
-  sumarizacao2 <- sum_as(value2, name2, con)
-
-  chaves_join <- join_on(group, con)
-
+subquery_padrao <- function(con, group, value1, name1,table1, filtro){
   group1 <- purrr::map(group, ~ DBI::Id(table = table1, column = .x))
-  group2 <- purrr::map(group, ~ DBI::Id(table = table2, column = .x))
   if (length(group1) == 1) group1 <- group1[[1]]
-  if (length(group2) == 1) group2 <- group2[[1]]
+  sumarizacao1 <- sum_as(value1, name1, con)
 
   subquery1 <- glue::glue_sql(
     "select {`group1`*},", sumarizacao1, "\n",
@@ -56,13 +46,17 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
     "group by {`group1`*}",
     .con = con
   )
-  subquery2 <- glue::glue_sql(
-    "select {`group2`*},", sumarizacao2, "\n",
-    "from {`table2`}\n",
-    filtro, "\n",
-    "group by {`group2`*}",
-    .con = con
-  )
+  return(subquery1)
+}
+query_padrao <- function(con, group, value1, value2, name1, name2, table1, table2, filtro) {
+  stopifnot(length(filtro) == 1)
+  stopifnot(length(value1) == length(name1))
+  stopifnot(length(value2) == length(name2))
+
+  chaves_join <- join_on(group, con)
+
+  subquery1 <- subquery_padrao(con = con, group = group, value1 = value1, name1 = name1, table1 = table1, filtro = filtro)
+  subquery2 <- subquery_padrao(con = con, group = group, value1 = value2, name1 = name2, table1 = table2, filtro = filtro)
 
   cols1 <- c(
     purrr::map(group, ~ DBI::Id(table = "t1", column = .x)),
@@ -74,22 +68,20 @@ query_padrao <- function(con, group, value1, value2, name1, name2, table1, table
     purrr::map(name1, ~ DBI::Id(table = "t1", column = .x)),
     purrr::map(name2, ~ DBI::Id(table = "t2", column = .x))
   )
-  data <- DBI::dbGetQuery(
-    con,
-    glue::glue_sql(
-      "select {`cols1`*}
-      from ({subquery1}) t1
-      left join ({subquery2}) t2 on {chaves_join}
-      union all
-      select {`cols2`*}
-      from ({subquery2}) t2
-      left join ({subquery1}) t1 on {chaves_join}
-      ",
-      .con = con
-    )
+
+  query <- glue::glue_sql(
+    "select {`cols1`*}
+    from ({subquery1}) t1
+    left join ({subquery2}) t2 on {chaves_join}
+    union
+    select {`cols2`*}
+    from ({subquery2}) t2
+    left join ({subquery1}) t1 on {chaves_join}
+    ",
+    .con = con
   )
 
-  return(data)
+  return(query)
 }
 
 #' Cria objeto datatable

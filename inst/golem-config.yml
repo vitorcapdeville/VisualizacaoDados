@@ -5,6 +5,7 @@ default:
   app_prod: no
   # Conexao com o sql. Nao precisa ser via SQLite
   con: !expr DBI::dbConnect(RSQLite::SQLite(), "inst/penguins.sqlite")
+  ## TABELAS
   # Colunas que irao definir os filtros
   colunasFiltro: !expr c("species", "island", "sex", "year","idade", "Flag")
   colunasFiltroNome: !expr c("Species", "Island", "Sex", "Year", "Idade", "Flag")
@@ -27,6 +28,17 @@ default:
   colunasTransformadas: !expr c("`Bill length`/`Flipper length`", "`Body mass`^2")
   colunasTransformadasNome: !expr c("Bill/Flipper length", "bobody mass")
   formatosTransformadas: !expr c("perc", "number")
+  ## GRAFICOS
+  # Aqui todos devem ser list
+  nome_grafico: !expr c("Bill length by year")
+  colunas_x: !expr list("year")
+  colunas_y: !expr list("bill_length_mm")
+  colunas_name: !expr list(NULL)
+  tickx: !expr list(NULL)
+  ticky: !expr list(NULL)
+  titlex: !expr list(NULL)
+  titley: !expr list(NULL)
+  barmode: !expr list(NULL)
   nome_pagina: "Example APP"
   title_header: "APP"
 production:

@@ -12,9 +12,19 @@ app_ui <- function(request) {
     shinydashboard::sidebarMenu(
       id = "sidebarMenu",
       shinydashboard::menuItem(
-        "Principal",
+        "Resumo",
         tabName = "principal",
+        icon = icon("home")
+      ),
+      shinydashboard::menuItem(
+        "Tabelas",
+        tabName = "tabelas_detalhe",
         icon = icon("users")
+      ),
+      shinydashboard::menuItem(
+        "Gráficos",
+        tabName = "graficos_detalhe",
+        icon = icon("chart-line")
       )
     )
   )
@@ -23,24 +33,30 @@ app_ui <- function(request) {
     shinydashboard::tabItems(
       shinydashboard::tabItem(
         tabName = "principal",
-        shinydashboard::box(
-          status = "primary",
-          solidHeader = T,
-          title = strong("Filtros"),
-          id = "filtros",
-          collapsible = TRUE,
-          collapsed = F,
-          closable = F,
-          width = 12,
-          mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 3, estruturaPadrao, defaultValues, colunasFiltroTipo, 1)
-        ),
+        mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 3, estruturaPadrao, defaultValues, colunasFiltroTipo, 1),
+      ),
+      shinydashboard::tabItem(
+        tabName = "tabelas_detalhe",
         do.call(
           shinydashboard::tabBox,
           c(
             list(title = "", id = "tabset1", width = 12, height = "600px"),
             purrr::map2(
               colunasTabela, colunasTabelaNome,
-              ~mod_create_table_ui(id = .x, nome = .y, value1 = colunasValorTabela1, value2 = colunasValorTabela2, name1 = colunasValorNomeTabela1, name2 = colunasValorNomeTabela2)
+              ~mod_create_table_ui(id = .x, nome = .y)
+            )
+          )
+        )
+      ),
+      shinydashboard::tabItem(
+        tabName = "graficos_detalhe",
+        do.call(
+          shinydashboard::tabBox,
+          c(
+            list(title = "", id = "tabset1_graph", width = 12, height = "600px"),
+            purrr::pmap(
+              list(glue::glue("{colunas_x}x{colunas_y}"), nome_grafico),
+              ~mod_barplot_ui(id = ..1, nome = ..2)
             )
           )
         )

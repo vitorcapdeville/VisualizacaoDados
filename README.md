@@ -43,6 +43,12 @@ library(VisualizacaoDados)
 
 -   incluir outputs q dependem apenas de uma das tabelas
 
+-   Coloquei barplots, mas preciso adaptar ainda para o caso que o
+    barplot depende das duas tabelas (atualmente so da pra fazer com
+    uma. Preciso q seja possivel fazer com dados q dependam só de uma ou
+    das duas. Talvez seja mais facil botar sempre as duas independente
+    de depender de uma ou das duas)
+
 ### Correções
 
 -   Estou usando o proxy, isso significa q quando o filtro muda, ele nao
@@ -56,6 +62,14 @@ library(VisualizacaoDados)
         rsrsrsrsrsrsrsrs
 
 -   Colocar CARDs com valores totais.
+
+-   Verificar se faz mais sentido usar o dplyr pra montar a query ao
+    inves de montar a query explicitamente. quero ver um jeito de
+    compartilhar os dados entre as tabelas e os graficos, pro caso em
+    que o grafico e a tabela usam o mesmo dado, se possivel.
+
+-   Adicionar uma forma de exibir a query que gerou a tabela atual,
+    junto com o download.
 
 -   Verificar se vale mudar para a tabela gerada com excelR. Precisaria
     achar uma forma de incluir os filtros
@@ -79,11 +93,6 @@ library(VisualizacaoDados)
     separadas é que uma delas geralmente é muito menor, entao em tese
     juntar as duas ocuparia mais espaco, ja que teria q replicar NULL em
     varias linhas da segunda tabela.
-
--   Testar se o filtro baseado em uma das tabelas da certo no full join
-    quando tem entrada em uma das tabelas e nao tem na outra. Exemplo:
-    t1 full join t2. Tem valor na t2, mas nao tem na t1. Eu coloco o
-    filtro em t1. O que acontece?
 
 ## Code of Conduct
 

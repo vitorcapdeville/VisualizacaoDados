@@ -17,21 +17,33 @@
 mod_saved_choices_ui <- function(id, colunas_filtro, colunas_filtro_nome, ncols,estruturaPadrao, default_values, colunas_filtro_tipo, step = 1){
   ns <- NS(id)
   tagList(
-    filtrosEstrutura(
-      id = purrr::map(colunas_filtro, ns), colunas_filtro_nome = colunas_filtro_nome, ncols = ncols,
-      estruturaPadrao = estruturaPadrao, default_values = default_values,
-      colunas_filtro_tipo = colunas_filtro_tipo, step = 1
-    ),
-    hr(),
-    tagList(
-      tags$div(
-        align = "center",
-        fluidRow(
-          column(6, uiOutput(ns('reset_button'))),
-          column(6, uiOutput(ns('save_button')))
+    shinydashboard::box(
+      status = "primary",
+      solidHeader = T,
+      title = strong("Filtros"),
+      id = "filtros-box",
+      collapsible = TRUE,
+      collapsed = F,
+      closable = F,
+      width = 12,
+      filtrosEstrutura(
+        id = purrr::map(colunas_filtro, ns), colunas_filtro_nome = colunas_filtro_nome, ncols = ncols,
+        estruturaPadrao = estruturaPadrao, default_values = default_values,
+        colunas_filtro_tipo = colunas_filtro_tipo, step = 1
+      ),
+      hr(),
+      tagList(
+        tags$div(
+          align = "center",
+          fluidRow(
+            column(6, uiOutput(ns('reset_button'))),
+            column(6, uiOutput(ns('save_button')))
+          )
         )
       )
     )
+
+
   )
 }
 

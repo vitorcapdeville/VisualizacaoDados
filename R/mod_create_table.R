@@ -26,7 +26,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_create_table_ui <- function(id, nome, value1, value2, name1, name2) {
+mod_create_table_ui <- function(id, nome) {
   ns <- NS(id)
 
   tabPanel(
@@ -62,7 +62,7 @@ mod_create_table_server <- function(id, group, group_name, con, value1, value2, 
       preTable <- reactive({
         # Isso evita rodar esse reactive para as tabs q nao estao abertas no momento
         req(current_tab() == group_name)
-        tabela = query_padrao(
+        query = query_padrao(
           con = con,
           group = group,
           value1 = value1,
@@ -73,6 +73,11 @@ mod_create_table_server <- function(id, group, group_name, con, value1, value2, 
           table2 = table2,
           filtro = filtro()$filtro
         )
+
+        tabela <- DBI::dbGetQuery(
+          con,
+          query
+        ) %>% dplyr::arrange(dplyr::across(dplyr::all_of(group)))
 
         # Adiciona as colunas que sao criadas pos agregacao.
         tabela <- purrr::reduce2(

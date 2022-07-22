@@ -23,6 +23,7 @@ Imports:
     lubridate,
     magrittr,
     openxlsx,
+    plotly,
     purrr,
     shiny (>= 1.7.1),
     shinycssloaders,

@@ -48,6 +48,14 @@ app_server <- function(input, output, session) {
     )
   )
 
+  purrr::pmap(
+    list(glue::glue("{colunas_x}x{colunas_y}"), colunas_x, colunas_y, colunas_name, tickx, ticky, titlex, titley, barmode),
+    ~mod_barplot_server(
+      id = ..1, nome_tabela = "bill", x = ..2, y = ..3, name = ..4, tickx = ..5, ticky = ..6,
+      titlex = ..7, titley = ..8, barmode = ..9, filtro = dados_filt
+    )
+  )
+
   if (!interactive()) {
     session$onSessionEnded(function() {
       stopApp()

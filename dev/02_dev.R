@@ -22,11 +22,13 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "create_table", with_test = TRUE) # Name of the module
 golem::add_module(name = "saved_choices", with_test = TRUE) # Name of the module
+golem::add_module(name = "barplot", with_test = TRUE) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct("tables", with_test = TRUE)
 golem::add_fct("filtro", with_test = TRUE)
+golem::add_fct("plot", with_test = TRUE)
 golem::add_utils("ui", with_test = TRUE)
 golem::add_utils("server", with_test = TRUE)
 golem::add_utils("", with_test = TRUE)

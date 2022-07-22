@@ -19,6 +19,16 @@ app_global <- function() {
   colunasTransformadas <<- configs$colunasTransformadas
   colunasTransformadasNome <<- configs$colunasTransformadasNome
   formatosTransformadas <<- configs$formatosTransformadas
+
+  nome_grafico <<- configs$nome_grafico
+  colunas_x <<- configs$colunas_x
+  colunas_y <<- configs$colunas_y
+  colunas_name <<- configs$colunas_name
+  tickx <<- configs$tickx
+  ticky <<- configs$ticky
+  titlex <<- configs$titlex
+  titley <<- configs$titley
+  barmode <<- configs$barmode
   defaultValues <<- get_default_values(con = con, colunas_filtro = colunasFiltro, colunas_filtro_tipo = colunasFiltroTipo)
 
 }
