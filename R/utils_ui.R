@@ -39,7 +39,7 @@ filtrosEstrutura <- function(id, colunas_filtro_nome, ncols, estruturaPadrao, de
 
 genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_values, step) {
   stopifnot(colunas_filtro_tipo %in% c("picker", "slider", "checkBox", "dateRange"))
-  id2 <- substr(id, stringr::str_locate(id, "-")[1, 1] + 1, stringr::str_length(id))
+  id2 <- gsub(x = id,pattern =  ".*-", replacement = "")
   choices <- default_values[[id2]]
 
   if (colunas_filtro_tipo == "picker") {
@@ -71,7 +71,7 @@ genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_v
         label = colunas_filtro_nome,
         min = choices[1], max = choices[2],
         value = choices, step = step,
-        width = "80%"
+        width = "90%"
       )
     )
   } else if (colunas_filtro_tipo == "checkBox") {

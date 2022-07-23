@@ -8,7 +8,7 @@
 dateRangeMonthsInput <- function(inputId, label, start = NULL, end = NULL,
                                  min = NULL, max = NULL, format = "yyyy-mm-dd", startview = "month",
                                  minviewmode = "months", # added manually
-                                 weekstart = 0, language = "en", separator = " to ", width = NULL) {
+                                 weekstart = 0, language = "en", separator = " to ", width = "90%") {
 
   # If start and end are date objects, convert to a string with yyyy-mm-dd format
   # Same for min and max

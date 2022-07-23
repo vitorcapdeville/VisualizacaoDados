@@ -12,7 +12,6 @@ URL: https://github.com/vitorcapdeville/VisualizacaoDados
 BugReports: https://github.com/vitorcapdeville/VisualizacaoDados/issues
 Imports: 
     config (>= 0.3.1),
-    data.table,
     DBI,
     dplyr,
     DT,
@@ -20,7 +19,6 @@ Imports:
     glue,
     golem (>= 0.3.3),
     htmltools,
-    lubridate,
     magrittr,
     openxlsx,
     plotly,
@@ -28,9 +26,8 @@ Imports:
     shiny (>= 1.7.1),
     shinycssloaders,
     shinydashboard,
-    shinyjs,
-    shinyWidgets,
-    stringr
+    shinydashboardPlus,
+    shinyWidgets
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

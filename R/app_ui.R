@@ -5,9 +5,9 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  header <- shinydashboard::dashboardHeader(title = configs$title_header)
+  header <- shinydashboardPlus::dashboardHeader(title = configs$title_header, controlbarIcon = shiny::icon("filter"))
 
-  sidebar <- shinydashboard::dashboardSidebar(
+  sidebar <- shinydashboardPlus::dashboardSidebar(
     collapsed = TRUE,
     shinydashboard::sidebarMenu(
       id = "sidebarMenu",
@@ -22,7 +22,7 @@ app_ui <- function(request) {
         icon = icon("users")
       ),
       shinydashboard::menuItem(
-        "Gráficos",
+        "Gr\u00E1ficos",
         tabName = "graficos_detalhe",
         icon = icon("chart-line")
       )
@@ -32,8 +32,7 @@ app_ui <- function(request) {
   body <- shinydashboard::dashboardBody(
     shinydashboard::tabItems(
       shinydashboard::tabItem(
-        tabName = "principal",
-        mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 3, estruturaPadrao, defaultValues, colunasFiltroTipo, 1),
+        tabName = "principal"
       ),
       shinydashboard::tabItem(
         tabName = "tabelas_detalhe",
@@ -64,15 +63,28 @@ app_ui <- function(request) {
     )
   )
 
+  controlbar <- shinydashboardPlus::dashboardControlbar(
+    id = "controlbar",
+    width = 330,
+    shinydashboardPlus::controlbarMenu(
+      id = "controlbarmenu",
+      shinydashboardPlus::controlbarItem(
+        "Filtros",
+        mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 1, estruturaPadrao, defaultValues, colunasFiltroTipo, 1)
+      )
+    )
+  )
+
 
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    shinydashboard::dashboardPage(
+    shinydashboardPlus::dashboardPage(
       header = header,
       sidebar = sidebar,
-      body = body
+      body = body,
+      controlbar  = controlbar
     )
   )
 }
@@ -97,7 +109,6 @@ golem_add_external_resources <- function() {
       path = app_sys("app/www"),
       app_title = configs$nome_pagina
     ),
-    shinyjs::useShinyjs(),
     fresh::use_theme(configs$fresh_theme)
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
