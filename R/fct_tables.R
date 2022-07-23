@@ -1,5 +1,5 @@
 #' Funcoes auxiliares para montar a query.
-#'#' Funcoe#' Funcoes auxiliares para montar a query.
+#' #' Funcoe#' Funcoes auxiliares para montar a query.
 #'
 #' @param col nome da coluna a ser sumarizada (sum(col))
 #' @param name nome da coluna final (as name)
@@ -32,13 +32,11 @@ join_on <- function(group, con) {
 #' @param filtro uma string contendo a clausula de where completa (incluindo o termo where). Essa string
 #' usualmente é criada com a funcao `criacao_filtro`.
 #'
-#' @return a query em SQL para gerar a tabela.
 #' @noRd
-subquery_padrao <- function(con, group, value1, name1,table1, filtro){
+subquery_padrao <- function(con, group, value1, name1, table1, filtro) {
   group1 <- purrr::map(group, ~ DBI::Id(table = table1, column = .x))
   if (length(group1) == 1) group1 <- group1[[1]]
   sumarizacao1 <- sum_as(value1, name1, con)
-
   subquery1 <- glue::glue_sql(
     "select {`group1`*},", sumarizacao1, "\n",
     "from {`table1`}\n",
@@ -46,42 +44,35 @@ subquery_padrao <- function(con, group, value1, name1,table1, filtro){
     "group by {`group1`*}",
     .con = con
   )
-  return(subquery1)
+
+  return(DBI::dbGetQuery(con, subquery1))
 }
-query_padrao <- function(con, group, value1, value2, name1, name2, table1, table2, filtro) {
+query_padrao <- function(con, group, value1, name1, table1, value2, name2, table2, filtro, colunas_transformadas, colunas_transformadas_nome) {
   stopifnot(length(filtro) == 1)
   stopifnot(length(value1) == length(name1))
   stopifnot(length(value2) == length(name2))
+  stopifnot(length(colunas_transformadas) == length(colunas_transformadas_nome))
 
-  chaves_join <- join_on(group, con)
+  t1 <- subquery_padrao(con = con, group = group, value1 = value1, name1 = name1, table1 = table1, filtro = filtro)
 
-  subquery1 <- subquery_padrao(con = con, group = group, value1 = value1, name1 = name1, table1 = table1, filtro = filtro)
-  subquery2 <- subquery_padrao(con = con, group = group, value1 = value2, name1 = name2, table1 = table2, filtro = filtro)
-
-  cols1 <- c(
-    purrr::map(group, ~ DBI::Id(table = "t1", column = .x)),
-    purrr::map(name1, ~ DBI::Id(table = "t1", column = .x)),
-    purrr::map(name2, ~ DBI::Id(table = "t2", column = .x))
+  if (!is.null(tabela2)) {
+    t2 <- subquery_padrao(con = con, group = group, value1 = value2, name1 = name2, table1 = table2, filtro = filtro)
+    ret <- dplyr::full_join(t1, t2, by = group)
+  } else {
+    ret <- t1
+  }
+  # Adiciona as colunas que sao criadas pos agregacao.
+  ret <- purrr::reduce2(
+    .x = colunas_transformadas,
+    .y = colunas_transformadas_nome,
+    ~dplyr::mutate(..1, "{..3}" := eval(parse(text = ..2))),
+    .init = ret
   )
-  cols2 <- c(
-    purrr::map(group, ~ DBI::Id(table = "t2", column = .x)),
-    purrr::map(name1, ~ DBI::Id(table = "t1", column = .x)),
-    purrr::map(name2, ~ DBI::Id(table = "t2", column = .x))
-  )
+  # Remove coisas q podem causas problemas no filtro.
+  ret[is.na(ret)] <- 0
+  ret[ret == Inf | ret == -Inf] <- 0
 
-  query <- glue::glue_sql(
-    "select {`cols1`*}
-    from ({subquery1}) t1
-    left join ({subquery2}) t2 on {chaves_join}
-    union
-    select {`cols2`*}
-    from ({subquery2}) t2
-    left join ({subquery1}) t1 on {chaves_join}
-    ",
-    .con = con
-  )
-
-  return(query)
+  return(ret %>% dplyr::arrange(dplyr::across(dplyr::all_of(group))))
 }
 
 #' Cria objeto datatable

@@ -30,15 +30,15 @@ default:
   formatosTransformadas: !expr c("perc", "number")
   ## GRAFICOS
   # Aqui todos devem ser list
-  nome_grafico: !expr c("Bill length by year")
-  colunas_x: !expr list("year")
-  colunas_y: !expr list("bill_length_mm")
-  colunas_name: !expr list(NULL)
-  tickx: !expr list(NULL)
-  ticky: !expr list(NULL)
-  titlex: !expr list(NULL)
-  titley: !expr list(NULL)
-  barmode: !expr list(NULL)
+  nome_grafico: !expr c("Bill length by year", "Tamanho do fliper por ano e sexo")
+  colunas_x: !expr list("year", "year")
+  colunas_y: !expr list("Bill length", "Flipper length")
+  colunas_name: !expr list(NULL, "sex")
+  tickx: !expr list(NULL, NULL)
+  ticky: !expr list(NULL, NULL)
+  titlex: !expr list(NULL, "Sexo")
+  titley: !expr list(NULL, "Tamanho do fliper")
+  barmode: !expr list(NULL, "group")
   nome_pagina: "Example APP"
   title_header: "APP"
 production:

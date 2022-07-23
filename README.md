@@ -28,7 +28,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(VisualizacaoDados)
-## basic example code
+run_app()
 ```
 
 ## Updates futuros
@@ -43,11 +43,19 @@ library(VisualizacaoDados)
 
 -   incluir outputs q dependem apenas de uma das tabelas
 
--   Coloquei barplots, mas preciso adaptar ainda para o caso que o
-    barplot depende das duas tabelas (atualmente so da pra fazer com
-    uma. Preciso q seja possivel fazer com dados q dependam só de uma ou
-    das duas. Talvez seja mais facil botar sempre as duas independente
-    de depender de uma ou das duas)
+-   Barplot ta ajeitadinho. Dados sao criados num modulo so deles, e
+    chamado quando necessario. Queria testar se eu tenho um grafico e
+    uma tabela com exatamente o mesmo dado o que acontece.
+
+-   Queria colocar um “drill-down”, onde a gente clica em uma tabela e
+    aparecem mais detalhes sobre a linha em algum lugar, o mesmo com os
+    graficos.
+
+-   Ainda preciso decidir sobre a extensao a ser usada para as tabelas,
+    o DT parece suficiente, mas a possibilidade de usar formulas do
+    excel no excelR me enche os olhos. Teria que lidar com o filtro tho.
+
+-   
 
 ### Correções
 
@@ -61,12 +69,11 @@ library(VisualizacaoDados)
         pra callback, mas o callback nao posso usar as paginas
         rsrsrsrsrsrsrsrs
 
--   Colocar CARDs com valores totais.
+-   Criar uma pagina de recepção com algumas informacoes relevantes.
+    Maiores e menores valores por alguma variavel interessante, evolucao
+    temporal de valores para os dados completos e etc.
 
--   Verificar se faz mais sentido usar o dplyr pra montar a query ao
-    inves de montar a query explicitamente. quero ver um jeito de
-    compartilhar os dados entre as tabelas e os graficos, pro caso em
-    que o grafico e a tabela usam o mesmo dado, se possivel.
+-   Colocar CARDs com valores totais.
 
 -   Adicionar uma forma de exibir a query que gerou a tabela atual,
     junto com o download.
