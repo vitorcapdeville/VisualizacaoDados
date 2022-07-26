@@ -54,7 +54,6 @@ query_padrao <- function(con, group, value1, name1, table1, value2, name2, table
   stopifnot(length(colunas_transformadas) == length(colunas_transformadas_nome))
 
   t1 <- subquery_padrao(con = con, group = group, value1 = value1, name1 = name1, table1 = table1, filtro = filtro)
-
   if (!is.null(table2)) {
     t2 <- subquery_padrao(con = con, group = group, value1 = value2, name1 = name2, table1 = table2, filtro = filtro)
     ret <- dplyr::full_join(t1, t2, by = group)
@@ -64,7 +63,7 @@ query_padrao <- function(con, group, value1, name1, table1, value2, name2, table
 
   if (!is.null(cuts)) {
     ret <- ret %>%
-      dplyr::mutate("{group}" := cut(get(group), include.lowest = T, cuts, ordered_result = T)) %>%
+      dplyr::mutate("{group}" := cut(get(group), include.lowest = T, right = F, cuts, ordered_result = T)) %>%
       dplyr::group_by(dplyr::across(dplyr::all_of(group))) %>%
       dplyr::summarise(dplyr::across(dplyr::everything(), sum))
   }

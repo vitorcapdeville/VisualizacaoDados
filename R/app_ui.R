@@ -5,7 +5,10 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  header <- shinydashboardPlus::dashboardHeader(title = configs$title_header, controlbarIcon = shiny::icon("filter"))
+  header <- shinydashboardPlus::dashboardHeader(
+    title = configs$title_header,
+    controlbarIcon = tagList(tag("font", list(strong("Filtros"), "size" = "+1")), shiny::icon("filter"))
+  )
 
   sidebar <- shinydashboardPlus::dashboardSidebar(
     collapsed = TRUE,
@@ -25,6 +28,11 @@ app_ui <- function(request) {
         "Gr\u00E1ficos",
         tabName = "graficos_detalhe",
         icon = icon("chart-line")
+      ),
+      shinydashboard::menuItem(
+        "Personalizado",
+        tabName = "custom",
+        icon = icon("plus")
       )
     )
   )
@@ -50,30 +58,26 @@ app_ui <- function(request) {
           colunasTabela,
           ~mod_create_table_ui(id = .x)
         )
-        # do.call(
-        #   shinydashboard::tabBox,
-        #   c(
-        #     list(title = "", id = "tabset1", width = 12, height = "600px"),
-        #     purrr::map2(
-        #       colunasTabela, colunasTabelaNome,
-        #       ~mod_create_table_ui(id = .x, nome = .y)
-        #     )
-        #   )
-        # )
       ),
       shinydashboard::tabItem(
         tabName = "graficos_detalhe",
         do.call(
           shinydashboard::tabBox,
           c(
-            list(title = "", id = "tabset1_graph", width = 12, height = "600px"),
+            list(title = "", id = "tabset1_graph", width = 12),
             purrr::pmap(
               list(glue::glue("{colunas_x}x{colunas_y}"), nome_grafico),
               ~mod_barplot_ui(id = ..1, nome = ..2)
             )
           )
         )
+      ),
+      shinydashboard::tabItem(
+        tabName = "custom",
+        shinyWidgets::pickerInput("group_by", "Agrupamento", choices = colunas_all_group, selected = NULL, multiple = T),
+        mod_create_table_ui(id = "custom_table")
       )
+
     )
   )
 

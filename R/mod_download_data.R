@@ -32,7 +32,7 @@ mod_download_data_server <- function(id, group, preTable, filtro){
         dados[is.na(dados)] = 0
         wb <- openxlsx::createWorkbook()
 
-        openxlsx::addWorksheet(wb, glue::glue("Resultado por {toString(group)}"))
+        openxlsx::addWorksheet(wb, glue::glue("Sheet1"))
         openxlsx::writeData(wb, 1, dados, startRow = 3, startCol = 1)
         openxlsx::writeData(wb, 1, filtro()$filtro, startRow = 1, startCol = 1, colNames = F, rowNames = F)
 

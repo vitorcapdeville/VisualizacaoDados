@@ -5,6 +5,7 @@ default:
   app_prod: no
   # Conexao com o sql. Nao precisa ser via SQLite
   con: !expr DBI::dbConnect(RSQLite::SQLite(), "inst/penguins.sqlite")
+  colunas_all_group: !expr c("Id","species", "island", "sex")
   ## TABELAS
   # Colunas que irao definir os filtros
   colunasFiltro: !expr c("species", "island", "sex", "year","idade", "Flag")
@@ -30,7 +31,7 @@ default:
   colunasTransformadasNome: !expr c("Bill/Flipper length", "bobody mass")
   formatosTransformadas: !expr c("perc", "number")
   ## GRAFICOS
-  # Aqui todos devem ser list
+  # Aqui todos devem ser ESCALRES
   # Grafico da 1 pagina
   plot_home_1_nome_grafico: "Bill length by year"
   plot_home_1_colunas_x: "year"
@@ -41,6 +42,7 @@ default:
   plot_home_1_titlex: NULL
   plot_home_1_titley: NULL
   plot_home_1_barmode: NULL
+  # Aqui todos devem ser list
   # Outros graficso
   nome_grafico: !expr c("Bill length by year", "Tamanho do fliper por ano e sexo")
   colunas_x: !expr list("year", "year")

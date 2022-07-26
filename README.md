@@ -43,17 +43,17 @@ run_app()
     aparecem mais detalhes sobre a linha em algum lugar, o mesmo com os
     graficos.
 
--   Verificar como ordenar as faixas, e uma estrutura melhor para
-    nomea-las. Pensar se quero deixar o step dinamico tb.
-
--   Verificar uma estrutura melhor para guardar o download da tabela e o
-    controle das faixas.
+-   Nomear as faixas melhor. Pensar se quero deixar o step dinamico tb.
 
 -   Verificar no reactlog pq a tabela é reconstruida duas vezes qnd muda
     as faixas, e talvez colocar um timer para ter um minimo de tempo
     demorando pra ativar o cssloader
 
--   Incluir uma box para tabela custom e para grafico custom tb.
+-   Verificar se quero grafico custom tb. Tabela custom preciso usar o
+    modulo de saved choices, e mexer no modulo da tabela para permitir
+    selecionar quais colunas serao exibidas na tabela final (devo
+    permitir diferenciar as colunas q serao trazidas do sql e calculadas
+    pos sql das que serao exibidas.)
 
 ### Correções
 

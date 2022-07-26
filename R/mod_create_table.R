@@ -48,7 +48,7 @@ mod_create_table_ui <- function(id, nome) {
 mod_create_table_server <- function(id, group, value1, value2, name1, name2, formats1, formats2, table1, table2, colunas_transformadas, colunas_transformadas_nome,
                                     formato_colunas_transformadas, fixed = 1, widths = c("400px","200px","200px"),
                                     align = "left", footer = T, filtro = NULL,
-                                    downloadable = T, dynamic_groups = F, nome = NULL) {
+                                    downloadable = T, dynamic_groups = F, nome = NULL, collapsed = T) {
   stopifnot(is.reactive(filtro))
   moduleServer(
     id,
@@ -68,7 +68,7 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
         pontos_corte = NULL
       }
 
-
+      # browser()
       preTable <- mod_query_data_server(
         id = "dados_tab",
         con = con,
@@ -100,7 +100,7 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
           title = strong(nome),
           id = ns(nome),
           collapsible = TRUE,
-          collapsed = T,
+          collapsed = collapsed,
           closable = F,
           shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
           width = 12,
