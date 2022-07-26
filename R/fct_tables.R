@@ -47,7 +47,7 @@ subquery_padrao <- function(con, group, value1, name1, table1, filtro) {
 
   return(DBI::dbGetQuery(con, subquery1))
 }
-query_padrao <- function(con, group, value1, name1, table1, value2, name2, table2, filtro, colunas_transformadas, colunas_transformadas_nome) {
+query_padrao <- function(con, group, value1, name1, table1, value2, name2, table2, filtro, colunas_transformadas, colunas_transformadas_nome, cuts) {
   stopifnot(length(filtro) == 1)
   stopifnot(length(value1) == length(name1))
   stopifnot(length(value2) == length(name2))
@@ -61,15 +61,22 @@ query_padrao <- function(con, group, value1, name1, table1, value2, name2, table
   } else {
     ret <- t1
   }
+
+  if (!is.null(cuts)) {
+    ret <- ret %>%
+      dplyr::mutate("{group}" := as.character(cut(get(group), include.lowest = T, cuts))) %>%
+      dplyr::group_by(dplyr::across(dplyr::all_of(group))) %>%
+      dplyr::summarise(dplyr::across(dplyr::everything(), sum))
+  }
   # Adiciona as colunas que sao criadas pos agregacao.
   ret <- purrr::reduce2(
     .x = colunas_transformadas,
     .y = colunas_transformadas_nome,
-    ~dplyr::mutate(..1, "{..3}" := eval(parse(text = ..2))),
+    ~ dplyr::mutate(..1, "{..3}" := eval(parse(text = ..2))),
     .init = ret
-  )
+  ) %>%
+    dplyr::mutate(dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), ~ifelse(is.na(.x), 0, .x)))
   # Remove coisas q podem causas problemas no filtro.
-  ret[is.na(ret)] <- 0
   ret[ret == Inf | ret == -Inf] <- 0
 
   return(ret %>% dplyr::arrange(dplyr::across(dplyr::all_of(group))))

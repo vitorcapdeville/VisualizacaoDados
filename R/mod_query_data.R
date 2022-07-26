@@ -1,7 +1,7 @@
 #' query_data Server Functions
 #'
 #' @noRd
-mod_query_data_server <- function(id, con, group, value1, name1, table1, value2, name2, table2, filtro, colunas_transformadas, colunas_transformadas_nome){
+mod_query_data_server <- function(id, con, group, value1, name1, table1, value2, name2, table2, filtro, colunas_transformadas, colunas_transformadas_nome, cuts = NULL){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     # Tras os dados do SQL, com as colunas iniciais
@@ -18,7 +18,8 @@ mod_query_data_server <- function(id, con, group, value1, name1, table1, value2,
         table2 = table2,
         filtro = filtro()$filtro,
         colunas_transformadas = colunas_transformadas,
-        colunas_transformadas_nome = colunas_transformadas_nome
+        colunas_transformadas_nome = colunas_transformadas_nome,
+        cuts = if(!is.null(cuts)) cuts()$cuts else cuts
       )
       list(tabela = tabela)
     })

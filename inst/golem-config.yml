@@ -14,6 +14,7 @@ default:
   # que forem definidas aqui, podem ser escolhidas mais de 1 coluna como agrupamento
   colunasTabela: !expr list("Id","species", "island", "sex", c("year", "island"))
   colunasTabelaNome: !expr c("Long table","Species", "Island", "Sex", "Year")
+  dynamic_groups: !expr c(T, F, F, F, F)
   # Nome das tabelas com os dados
   tabela1: "bill"
   tabela2: "rest"
@@ -30,6 +31,17 @@ default:
   formatosTransformadas: !expr c("perc", "number")
   ## GRAFICOS
   # Aqui todos devem ser list
+  # Grafico da 1 pagina
+  plot_home_1_nome_grafico: "Bill length by year"
+  plot_home_1_colunas_x: "year"
+  plot_home_1_colunas_y: "Bill length"
+  plot_home_1_colunas_name: NULL
+  plot_home_1_tickx: NULL
+  plot_home_1_ticky: NULL
+  plot_home_1_titlex: NULL
+  plot_home_1_titley: NULL
+  plot_home_1_barmode: NULL
+  # Outros graficso
   nome_grafico: !expr c("Bill length by year", "Tamanho do fliper por ano e sexo")
   colunas_x: !expr list("year", "year")
   colunas_y: !expr list("Bill length", "Flipper length")

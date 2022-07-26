@@ -1,18 +1,6 @@
 /* Alinha os datatables na esquerda */
 .datatables .display {margin-left: 0;}
 
-/* Diminui margem abaixo do slider (e sabe-se la mais oq) */
-.form-group {margin-bottom: 5px; margin-left: 30px; margin-right: 30px;}
-
-/* Diminui o tamanho da bolinha do slider e reposiciona (inicio) */
-span.irs-slider.from {top: 22px;width: 12px;height: 12px;}
-
-/* Diminui o tamanho da bolinha do slider e reposiciona (fim) */
-span.irs-slider.type_last {top: 22px;width: 12px;height: 12px;}
-
-/* Diminui o tamanho da bolinha do slider e reposiciona (terceiro tipo diferente) */
-span.irs-slider.to {top: 22px;width: 12px;height: 12px;}
-
 /* Essa opção faz com q o picker input quando aberto tenha a mesma width do botão que o fez abrir. */
 .dropdown-menu.open {width: inherit;}
 
@@ -22,16 +10,4 @@ span.irs-slider.to {top: 22px;width: 12px;height: 12px;}
 /* Define o tamanho mínimo do dropdown. Quando impeço ele de abrir pra cima, o tamanho mínimo fica zoado. */
 .dropdown-menu.open {overflow: hidden;min-height: 248px;}
 
-/* Remove as setinhas do lado do numericInput */
-input[type=number] {
-	  -moz-appearance:textfield;
-}
-input[type=number]::{
-	  -moz-appearance:textfield;
-}
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-	  -webkit-appearance: none;
-	  margin: 0;
-}
 .dropdown-menu>li>a {padding: 0px 5px;}

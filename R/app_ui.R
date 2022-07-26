@@ -19,7 +19,7 @@ app_ui <- function(request) {
       shinydashboard::menuItem(
         "Tabelas",
         tabName = "tabelas_detalhe",
-        icon = icon("users")
+        icon = icon("table")
       ),
       shinydashboard::menuItem(
         "Gr\u00E1ficos",
@@ -32,7 +32,17 @@ app_ui <- function(request) {
   body <- shinydashboard::dashboardBody(
     shinydashboard::tabItems(
       shinydashboard::tabItem(
-        tabName = "principal"
+        tabName = "principal",
+        shinydashboardPlus::box(
+          width = 12,
+          title = plot_home_1_nome_grafico,
+          closable = F,
+          status = NULL,
+          solidHeader = FALSE,
+          collapsible = F,
+          sidebar = NULL,
+          mod_barplot_ui(id = "plot_home_1", nome = plot_home_1_nome_grafico)
+        )
       ),
       shinydashboard::tabItem(
         tabName = "tabelas_detalhe",
@@ -109,6 +119,7 @@ golem_add_external_resources <- function() {
       path = app_sys("app/www"),
       app_title = configs$nome_pagina
     ),
+    shinyjs::useShinyjs(),
     fresh::use_theme(configs$fresh_theme)
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()

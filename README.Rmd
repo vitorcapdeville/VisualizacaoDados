@@ -43,23 +43,25 @@ run_app()
 
 ### Modulos
 
--   Estrutura de faixas (faixa etária, faixa de capital etc)
-
-    -   Incluir quantidade dinâmica de faixas
-
 -   Estrutura de agravo
 
 -   incluir outputs q dependem apenas de uma das tabelas
 
--   Barplot ta ajeitadinho. Dados sao criados num modulo so deles, e chamado quando necessario. Queria testar se eu tenho um grafico e uma tabela com exatamente o mesmo dado o que acontece.
-
 -   Queria colocar um "drill-down", onde a gente clica em uma tabela e aparecem mais detalhes sobre a linha em algum lugar, o mesmo com os graficos.
 
--   Ainda preciso decidir sobre a extensao a ser usada para as tabelas, o DT parece suficiente, mas a possibilidade de usar formulas do excel no excelR me enche os olhos. Teria que lidar com o filtro tho.
+-   Verificar como ordenar as faixas, e uma estrutura melhor para nomea-las.
 
--   
+-   Verificar uma estrutura melhor para guardar o download da tabela e o controle das faixas.
+
+-   Verificar no reactlog pq a tabela é reconstruida duas vezes qnd muda as faixas, e talvez colocar um timer para ter um minimo de tempo demorando pra ativar o cssloader
 
 ### Correções
+
+-   Verificar alternativa ao DT.
+
+-   Verificar manipulateWidget
+
+-   Fazer as faixas funcionarem. O noUiSlider por algum motivo nao ta renderizando. O slider normal renderiza.
 
 -   Estou usando o proxy, isso significa q quando o filtro muda, ele nao mostra o loading na tabela, e mantem tudo q eu ja filtrei e etc. Me parece mais clean, mas eu preciso de um aviso pra bloquear a interação com o APP enquanto o filtro estiver rodando, talvez um sweet alert.
 
