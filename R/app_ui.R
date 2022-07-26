@@ -80,7 +80,7 @@ app_ui <- function(request) {
       id = "controlbarmenu",
       shinydashboardPlus::controlbarItem(
         "Filtros",
-        mod_saved_choices_ui("filtros", colunasFiltro, colunasFiltroNome, 1, estruturaPadrao, defaultValues, colunasFiltroTipo, 1)
+        mod_saved_choices_ui(id = "filtros", id_inputs = colunasFiltro, label = colunasFiltroNome, ncols = 1, choices = defaultValues, tipo = colunasFiltroTipo, step = 1)
       )
     )
   )

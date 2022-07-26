@@ -62,13 +62,15 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
         output$dynamic_groups <- renderUI({
           mod_dynamic_groups_ui(ns(id))
         })
+        pontos_corte <- reactive({
+          req(breaks$fx1)
+          cuts = purrr::map(sort(names(breaks)[startsWith(names(breaks), "fx")]), ~`[[`(breaks, .x))
+          list(cuts = c(cuts[[1]][1], sapply(cuts, `[[`, 2)))
+        })
+      } else {
+        pontos_corte = NULL
       }
 
-      pontos_corte <- reactive({
-        req(breaks$fx1)
-        cuts = purrr::map(sort(names(breaks)[startsWith(names(breaks), "fx")]), ~`[[`(breaks, .x))
-        list(cuts = c(cuts[[1]][1], sapply(cuts, `[[`, 2)))
-      })
 
       preTable <- mod_query_data_server(
         id = "dados_tab",
@@ -91,6 +93,7 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
 
 
       output$tabelaPadrao <- DT::renderDT({
+        if(dynamic_groups) req(pontos_corte)
         createDT(
           data = preTable()$tabela, fixed = fixed, cols = col_names,
           formats = c(formats1, formats2,formato_colunas_transformadas),

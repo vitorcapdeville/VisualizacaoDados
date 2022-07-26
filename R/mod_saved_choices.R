@@ -14,15 +14,14 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_saved_choices_ui <- function(id, colunas_filtro, colunas_filtro_nome, ncols,estruturaPadrao, default_values, colunas_filtro_tipo, step = 1){
+mod_saved_choices_ui <- function(id, id_inputs, label, ncols, choices, tipo, step = 1){
   ns <- NS(id)
   tagList(
     tags$div(
       align = "center",
       filtrosEstrutura(
-        id = purrr::map(colunas_filtro, ns), colunas_filtro_nome = colunas_filtro_nome, ncols = ncols,
-        estruturaPadrao = estruturaPadrao, default_values = default_values,
-        colunas_filtro_tipo = colunas_filtro_tipo, step = 1
+        ncols = ncols,
+        input_list = cria_filtros(id = purrr::map(id_inputs, ns), label = label, tipo = tipo, choices = choices, step = step)
       ),
       hr(),
       fluidRow(
@@ -39,14 +38,16 @@ mod_saved_choices_ui <- function(id, colunas_filtro, colunas_filtro_nome, ncols,
 #' @param saved_choices escolhas salvas pelo usuario. deve ser criado com reactiveValues
 #'
 #' @noRd
-mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_values, colunas_filtro_tipo){
+mod_saved_choices_server <- function(id, saved_choices, id_inputs, choices, tipo){
   moduleServer(
     id,
     function(input, output, session) {
+      ns <- session$ns
+
       # Renderizar botão de reset (apenas se houver alguma modificacao)
       output$reset_button <- renderUI({
         ns <- session$ns
-        if (any(unlist(purrr::map(colunas_filtro, ~comparacao1(coluna_filtro = .x, defaultValues = default_values, input = input))))) {
+        if (any(unlist(purrr::map2(choices[id_inputs], purrr::map(id_inputs, ~`[[`(input, .x)), ~comparacao1(choices = .x, input = .y))))) {
           actionButton(
             inputId = ns('reset'),
             label = 'Resetar sele\u00E7\u00E3o'
@@ -56,13 +57,14 @@ mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_
 
       # Efeito do botao reset
       observeEvent(input$reset, {
-        purrr::walk2(colunas_filtro, colunas_filtro_tipo, ~updateXXXInput(coluna_filtro = .x,coluna_filtro_tipo = .y, session = session,default_values = default_values, input = input))
+        purrr::pwalk(list(id_inputs, tipo, choices[id_inputs], purrr::map(id_inputs, ~`[[`(input, .x))), ~updateXXXInput(inputId = ..1, tipo = ..2, session = session, choices = ..3, input = ..4))
       })
 
       # Renderizar botao de salvar, azul se houver alteracao, branco caso contrario.
       output$save_button <- renderUI({
-        ns <- session$ns
-        status <- ifelse(all(unlist(purrr::map(colunas_filtro, ~comparacao2(coluna_filtro = .x , input = input, savedChoices = saved_choices)))),
+
+        # browser()
+        status <- ifelse(all(unlist(purrr::map2(purrr::map(id_inputs, ~`[[`(input, .x)), purrr::map(id_inputs, ~`[[`(saved_choices, .x)), ~comparacao2(input = .x, saved_choices = .y)))),
                          'light', 'primary')
         actionButton(
           inputId = ns('save'),
@@ -73,7 +75,7 @@ mod_saved_choices_server <- function(id, saved_choices, colunas_filtro, default_
 
       # Efeito do botao salvar
       observeEvent(input$save, {
-        purrr::walk(colunas_filtro, saveInput, input, saved_choices)
+        purrr::walk(id_inputs, ~saveInput(inputId = .x,input = input, saved_choices = saved_choices))
       })
 
       return(saved_choices)

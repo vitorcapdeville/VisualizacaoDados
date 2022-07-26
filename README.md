@@ -44,7 +44,7 @@ run_app()
     graficos.
 
 -   Verificar como ordenar as faixas, e uma estrutura melhor para
-    nomea-las.
+    nomea-las. Pensar se quero deixar o step dinamico tb.
 
 -   Verificar uma estrutura melhor para guardar o download da tabela e o
     controle das faixas.
@@ -52,6 +52,8 @@ run_app()
 -   Verificar no reactlog pq a tabela é reconstruida duas vezes qnd muda
     as faixas, e talvez colocar um timer para ter um minimo de tempo
     demorando pra ativar o cssloader
+
+-   Incluir uma box para tabela custom e para grafico custom tb.
 
 ### Correções
 

@@ -9,22 +9,22 @@
 #' @param input valores q o usuario escolheu para o input.
 #'
 #' @noRd
-updateXXXInput <- function(coluna_filtro, coluna_filtro_tipo, session, default_values, input) {
-  if (coluna_filtro_tipo == "picker") {
-    if (comparacao1(coluna_filtro, default_values, input)) {
-      shinyWidgets::updatePickerInput(session, coluna_filtro, selected = default_values[[coluna_filtro]])
+updateXXXInput <- function(inputId, tipo, session, choices, input) {
+  if (tipo == "picker") {
+    if (comparacao1(choices, input)) {
+      shinyWidgets::updatePickerInput(session, inputId, selected = choices)
     }
-  } else if (coluna_filtro_tipo == "slider") {
-    if (comparacao1(coluna_filtro, default_values, input)) {
-      updateSliderInput(session, coluna_filtro, value = default_values[[coluna_filtro]])
+  } else if (tipo == "slider") {
+    if (comparacao1(choices, input)) {
+      updateSliderInput(session, inputId, value = choices)
     }
-  } else if (coluna_filtro_tipo == "checkBox") {
-    if (comparacao1(coluna_filtro, default_values, input)) {
-      shinyWidgets::updateCheckboxGroupButtons(session, coluna_filtro, selected = default_values[[coluna_filtro]])
+  } else if (tipo == "checkBox") {
+    if (comparacao1(choices, input)) {
+      shinyWidgets::updateCheckboxGroupButtons(session, inputId, selected = choices)
     }
-  } else if (coluna_filtro_tipo == "dateRange") {
-    if (comparacao1(coluna_filtro, default_values, input)) {
-      updateDateRangeInput(session, coluna_filtro, start = default_values[[coluna_filtro]][1], end = default_values[[coluna_filtro]][2])
+  } else if (tipo == "dateRange") {
+    if (comparacao1(choices, input)) {
+      updateDateRangeInput(session, inputId, start = choices[1], end = choices[2])
     }
   }
 }
@@ -36,8 +36,8 @@ updateXXXInput <- function(coluna_filtro, coluna_filtro_tipo, session, default_v
 #' @param saved_choices valores escolhidos e confirmados anteriormente.
 #'
 #' @noRd
-saveInput <- function(coluna_filtro, input, saved_choices) {
-  if (!(comparacao2(coluna_filtro, input, saved_choices))) {
-    saved_choices[[coluna_filtro]] <- input[[coluna_filtro]]
+saveInput <- function(inputId, input, saved_choices) {
+  if (!(comparacao2(input[[inputId]], saved_choices[[inputId]]))) {
+    saved_choices[[inputId]] <- input[[inputId]]
   }
 }

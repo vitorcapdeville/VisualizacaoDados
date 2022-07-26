@@ -1,33 +1,35 @@
 #' Estrutura padrao
 #'
-#' @description Essa funcao define a estrutura padrao do filtro. Atualmente sao suportados
-#' filtros do tipo picker, checkBox, slider e dateRange. Os filtros sao criados dentro de colunas,
-#' que serao encaixadas dentro de linhas
+#' @description Essa funcao cria uma lista com os inputs.
 #'
 #' @param id identificador do input
-#' @param colunas_filtro_nome nome das colunas, a serem exibidas acima do filtro.
-#' @param colunas_filtro_tipo tipo de filtro a ser criado.
-#' @param default_values uma lista com todos os valores possiveis daquele filtro.
-#' @param default_values uma lista com todos os valores possiveis daquele filtro.
-#' @param width largura da coluna. See `?shiny::column` for more details.
+#' @param label label a ser exibido no input.
+#' @param tipo tipo de input.
+#' @param choices valores possiveis do input.
 #' @param step step do slider input. See `?shiny::sliderInput`
-#' @param ncols numero de colunas a ser utilizado em cada linha. Deve ser um numero que divide 12. (1, 2, 3, 4, 6 ou 12).
-#' @param estruturaPadrao funcao que define a estrutura padrao. Será incluido no fluidRow, logo, deve ser uma
-#' funcao que retorna um objeto html com a classe col, como `shiny::column()`
+#'
+#' @return lista contendo os inputs
 #'
 #' @noRd
-estruturaPadrao <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_values, width, step = 1) {
-  column(width, genericInput(id, colunas_filtro_nome, colunas_filtro_tipo, default_values, step))
+cria_filtros <- function(id, label, tipo, choices, step = 1) {
+  purrr::pmap(
+    list(id, label, tipo, choices, step),
+    ~genericInput(id = ..1, label = ..2, tipo = ..3, choices = ..4, step = ..5)
+  )
 }
 
-filtrosEstrutura <- function(id, colunas_filtro_nome, ncols, estruturaPadrao, default_values, colunas_filtro_tipo, step = 1) {
+#' filtrosEstrutura
+#'
+#' Funcao que monta a estrutura de colunas a partir dos filtros criados.
+#'
+#' @param input_list lista de inputs a serem posicionados, usualmente criado com cria_filtros.
+#' @param ncols numero de colunas a ser utilizado em cada linha. Deve ser um numero que divide 12. (1, 2, 3, 4, 6 ou 12).
+#'
+filtrosEstrutura <- function(ncols, input_list) {
   if (12 %% ncols != 0) stop("O resto da divis\u00E3o entre 12 e ncols deve ser zero.")
   width <- 12 / ncols
   # cria todos os filtros, um em cada posicao da lista. Cada filtro eh uma coluna.
-  colunas <- purrr::pmap(
-    list(id, colunas_filtro_nome, colunas_filtro_tipo),
-    ~estruturaPadrao(id = ..1, colunas_filtro_nome = ..2, colunas_filtro_tipo = ..3, default_values = default_values, width = width, step = 1)
-  )
+  colunas <- purrr::map(input_list, ~column(width = width, .x))
   # Separa a lista com as colunas em listas cada uma com tamanho ncols. Essas serao passadas
   # como argumento para o fluidRow e criarao as linhas
   cols_splited <- split(colunas, rep(seq(from = 1, to = ceiling(length(colunas)/ncols)), each = ncols)[seq(length(colunas))])
@@ -37,17 +39,15 @@ filtrosEstrutura <- function(id, colunas_filtro_nome, ncols, estruturaPadrao, de
   return(estrutura)
 }
 
-genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_values, step) {
-  stopifnot(colunas_filtro_tipo %in% c("picker", "slider", "checkBox", "dateRange"))
-  id2 <- gsub(x = id,pattern =  ".*-", replacement = "")
-  choices <- default_values[[id2]]
+genericInput <- function(id, label, tipo, choices, step = NULL) {
+  stopifnot(tipo %in% c("picker", "slider", "checkBox", "dateRange"))
 
-  if (colunas_filtro_tipo == "picker") {
+  if (tipo == "picker") {
     res <- tags$div(
       align = "center",
       shinyWidgets::pickerInput(
         inputId = id,
-        label = colunas_filtro_nome,
+        label = label,
         choices = choices,
         selected = choices,
         inline = F,
@@ -62,24 +62,24 @@ genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_v
         width = "90%"
       )
     )
-  } else if (colunas_filtro_tipo == "slider") {
+  } else if (tipo == "slider") {
     choices <- c(min(choices), max(choices))
     res <- tags$div(
       align = "center",
       sliderInput(
         inputId = id,
-        label = colunas_filtro_nome,
+        label = label,
         min = choices[1], max = choices[2],
         value = choices, step = step,
         width = "90%"
       )
     )
-  } else if (colunas_filtro_tipo == "checkBox") {
+  } else if (tipo == "checkBox") {
     res <- tags$div(
       align = "center",
       shinyWidgets::checkboxGroupButtons(
         inputId = id,
-        label = colunas_filtro_nome,
+        label = label,
         choices = choices,
         selected = choices,
         individual = TRUE,
@@ -91,7 +91,7 @@ genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_v
         justified = F
       )
     )
-  } else if (colunas_filtro_tipo == "dateRange") {
+  } else if (tipo == "dateRange") {
     choices <- c(
       min(choices %>% as.numeric() %>% as.Date("1970-01-01")),
       max(choices %>% as.numeric() %>% as.Date("1970-01-01"))
@@ -100,7 +100,7 @@ genericInput <- function(id, colunas_filtro_nome, colunas_filtro_tipo, default_v
       align = "center",
       dateRangeMonthsInput(
         inputId = id,
-        label = colunas_filtro_nome,
+        label = label,
         format = "MM/yy",
         min = choices[1],
         max = choices[2],

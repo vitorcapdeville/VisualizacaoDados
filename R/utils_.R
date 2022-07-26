@@ -12,13 +12,13 @@
 #' @return T ou F
 #'
 #' @noRd
-comparacao1 <- function(coluna_filtro, defaultValues, input) {
-  return(!all(defaultValues[[coluna_filtro]] %in% input[[coluna_filtro]]))
+comparacao1 <- function(choices, input) {
+  return(!all(choices %in% input))
 }
 
-comparacao2 <- function(coluna_filtro, input, savedChoices) {
-  return(all(savedChoices[[coluna_filtro]] %in% input[[coluna_filtro]]) &
-    all(input[[coluna_filtro]] %in% savedChoices[[coluna_filtro]]))
+comparacao2 <- function(input, saved_choices) {
+  return(all(saved_choices %in% input) &
+    all(input %in% saved_choices))
 }
 
 #' Funcao que define quais sao os valores padrao de cada filtro

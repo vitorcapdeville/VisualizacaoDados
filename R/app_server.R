@@ -13,18 +13,20 @@ app_server <- function(input, output, session) {
 
   #------------------------------Estrutura para salvar selecao--------------------------------------
   # Valor inicial do savedChoices
-  savedChoices <- reactiveValues()
-
+  saved_choices <- reactiveValues()
 
   for (i in colunasFiltro) {
-    savedChoices[[i]] <- defaultValues[[i]]
+    saved_choices[[i]] <- defaultValues[[i]]
   }
-  mod_saved_choices_server("filtros", savedChoices, colunasFiltro, defaultValues, colunasFiltroTipo)
+
+  # Deve ser iniciado um reactiveValues com o nome saved_choices para isto funcionar. O modulo ira editiar o valor desse reactiveValues de acordo
+  # com o input do usuario
+  mod_saved_choices_server(id = "filtros", saved_choices = saved_choices, id_inputs = colunasFiltro, choices = defaultValues, tipo = colunasFiltroTipo)
 
   #--------------------------------------------------Calculos da aba -------------------------------
   # Criação dos filtros necessário. Se não for necessário nenhum filtro, não filtrar.
   dados_filt <- reactive({
-    filtro <- unlist(purrr::pmap(list(colunasFiltro, colunasFiltroTipo, rvtl(savedChoices)[colunasFiltro], defaultValues[colunasFiltro]), criacao_filtro, con))
+    filtro <- unlist(purrr::pmap(list(colunasFiltro, colunasFiltroTipo, rvtl(saved_choices)[colunasFiltro], defaultValues[colunasFiltro]), criacao_filtro, con))
 
     if (!is.null(filtro)) {
       filtro <- glue::glue_sql("where ", glue::glue_sql_collapse(filtro, sep = " and "), .con = con)
