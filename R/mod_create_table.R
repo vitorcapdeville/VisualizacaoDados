@@ -28,19 +28,19 @@
 #' @importFrom shiny NS tagList
 mod_create_table_ui <- function(id, nome) {
   ns <- NS(id)
-
-  tabPanel(
-    title = strong(nome),
-    value = nome,
-    fluidRow(
-      div(
-        align = "center",
-        uiOutput(ns("downloadTable")),
-        uiOutput(ns("dynamic_groups"))
-      ),
-      column(12, shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))))
-    )
-  )
+  uiOutput(ns("tabela_final"))
+  # tabPanel(;
+  #   title = strong(nome),
+  #   value = nome,
+  #   fluidRow(
+  #     div(
+  #       align = "center",
+  #       uiOutput(ns("downloadTable")),
+  #       uiOutput(ns("dynamic_groups"))
+  #     ),
+  #     column(12, shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))))
+  #   )
+  # )
 }
 #' create_table Server Functions
 #'
@@ -48,7 +48,7 @@ mod_create_table_ui <- function(id, nome) {
 mod_create_table_server <- function(id, group, value1, value2, name1, name2, formats1, formats2, table1, table2, colunas_transformadas, colunas_transformadas_nome,
                                     formato_colunas_transformadas, fixed = 1, widths = c("400px","200px","200px"),
                                     align = "left", footer = T, filtro = NULL,
-                                    downloadable = T, dynamic_groups = F) {
+                                    downloadable = T, dynamic_groups = F, nome = NULL) {
   stopifnot(is.reactive(filtro))
   moduleServer(
     id,
@@ -59,13 +59,10 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
 
       if (dynamic_groups) {
         breaks = mod_dynamic_groups_server(id = id, min = 0, max = 120, step = 0.1, label = group)
-        output$dynamic_groups <- renderUI({
-          mod_dynamic_groups_ui(ns(id))
-        })
         pontos_corte <- reactive({
-          req(breaks$fx1)
-          cuts = purrr::map(sort(names(breaks)[startsWith(names(breaks), "fx")]), ~`[[`(breaks, .x))
-          list(cuts = c(cuts[[1]][1], sapply(cuts, `[[`, 2)))
+          req(length(breaks()$export) > 0)
+          cuts = breaks()$export#purrr::map(sort(names(breaks)[startsWith(names(breaks), "fx")]), ~`[[`(breaks, .x))
+          list(cuts = c(-Inf,cuts[[1]][1], sapply(cuts, `[[`, 2), +Inf))
         })
       } else {
         pontos_corte = NULL
@@ -86,9 +83,6 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
 
       if (downloadable) {
         mod_download_data_server(id = id, group = group, preTable = preTable, filtro = filtro)
-        output$downloadTable <- renderUI({
-          mod_download_data_ui(ns(id))
-        })
       }
 
 
@@ -98,6 +92,28 @@ mod_create_table_server <- function(id, group, value1, value2, name1, name2, for
           data = preTable()$tabela, fixed = fixed, cols = col_names,
           formats = c(formats1, formats2,formato_colunas_transformadas),
           widths = widths, align = align, footer = footer
+        )
+      })
+
+      output$tabela_final <- renderUI({
+        shinydashboardPlus::box(
+          title = strong(nome),
+          id = ns(nome),
+          collapsible = TRUE,
+          collapsed = T,
+          closable = F,
+          shinycssloaders::withSpinner(DT::DTOutput(ns("tabelaPadrao"))),
+          width = 12,
+          sidebar = if(dynamic_groups) {
+            shinydashboardPlus::boxSidebar(
+              id = ns(paste0(nome, "_sidebar")),
+              width = 25,
+              mod_dynamic_groups_ui(ns(id))
+            )
+          } else {
+            NULL
+          },
+          dropdownMenu = if(downloadable) shinydashboardPlus::boxDropdown(shinydashboardPlus::boxDropdownItem(mod_download_data_ui(ns(id)))) else NULL
         )
       })
 

@@ -3,25 +3,25 @@
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @param colunas_filtro nome das colunas (identicos ao sql) nas quais serao criados os filtros.
-#' @param colunas_filtro_nome nome que será de fato exibido próximo ao filtro.
-#' @param colunas_filtro_tipo tipo de filtro associado a coluna.
-#' @param ncols numero de colunas para a estrutura padrao
-#' @param estruturaPadrao funcao que define a estrutura padrao
-#' @param default_values valores default de todos os filtros.
-#' @param step só é usado quando tipo = slider. Define o step do slider.
+#' @param saved_choices reactiveValues que mantera as escolhas salvas atualmente.
+#' @param id_inputs id dos inputs que estao sob o efeito do modulo
+#' @param choices escolhas padrao para cada input em id_inputs
+#' @param tipo tipo de cada input em id_input
+#' @param ncols numero de colunas onde os filtros sertao arranjados
+#' @param label,step,input_list argumentos passados para cria_filtros
+#'
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_saved_choices_ui <- function(id, id_inputs, label, ncols, choices, tipo, step = 1){
+mod_saved_choices_ui <- function(id, id_inputs, label, ncols, choices, tipo, step = 1, input_list = NULL){
   ns <- NS(id)
   tagList(
     tags$div(
       align = "center",
       filtrosEstrutura(
         ncols = ncols,
-        input_list = cria_filtros(id = purrr::map(id_inputs, ns), label = label, tipo = tipo, choices = choices, step = step)
+        input_list = cria_filtros(id = purrr::map(id_inputs, ns), label = label, tipo = tipo, choices = choices, step = step, input_list = input_list)
       ),
       hr(),
       fluidRow(

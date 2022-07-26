@@ -47,14 +47,14 @@ app_server <- function(input, output, session) {
 
   # Tabelas
   purrr::pmap(
-    list(colunasTabela, colunasTabela, dynamic_groups),
+    list(colunasTabela, colunasTabela, dynamic_groups, colunasTabelaNome),
     ~mod_create_table_server(
       id = ..1, group = ..2, value1 = colunasValorTabela1, value2 = colunasValorTabela2,
       name1 = colunasValorNomeTabela1, name2 = colunasValorNomeTabela2,
       formats1 = formatosValorTabela1, formats2 = formatosValorTabela2,
       table1 = tabela1, table2 = tabela2,colunas_transformadas = colunasTransformadas,
       colunas_transformadas_nome = colunasTransformadasNome,formato_colunas_transformadas = formatosTransformadas,
-      fixed = 1, widths = c("200px", "120px", "120px"), filtro = dados_filt, downloadable = T, dynamic_groups = ..3
+      fixed = 1, widths = c("200px", "120px", "120px"), filtro = dados_filt, downloadable = T, dynamic_groups = ..3, nome = ..4
     )
   )
   # Graficos

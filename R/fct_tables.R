@@ -64,7 +64,7 @@ query_padrao <- function(con, group, value1, name1, table1, value2, name2, table
 
   if (!is.null(cuts)) {
     ret <- ret %>%
-      dplyr::mutate("{group}" := as.character(cut(get(group), include.lowest = T, cuts))) %>%
+      dplyr::mutate("{group}" := cut(get(group), include.lowest = T, cuts, ordered_result = T)) %>%
       dplyr::group_by(dplyr::across(dplyr::all_of(group))) %>%
       dplyr::summarise(dplyr::across(dplyr::everything(), sum))
   }

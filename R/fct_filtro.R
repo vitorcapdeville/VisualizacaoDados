@@ -18,7 +18,7 @@ criacao_filtro <- function(coluna_filtro, coluna_filtro_tipo, saved_choice, defa
     if (coluna_filtro_tipo %in% c("slider", "dateRange")) {
       filtro <- glue::glue_sql("{`coluna_filtro`} >= {min_val} and {`coluna_filtro`} <= {max_val}", min_val = saved_choice[1], max_val = saved_choice[2], .con = con)
     } else {
-      filtro <- glue::glue_sql("{`coluna_filtro`} in ({escolhas*})", escolhas = aux, .con = con)
+      filtro <- glue::glue_sql("{`coluna_filtro`} in ({escolhas*})", escolhas = saved_choice, .con = con)
     }
   }
 }

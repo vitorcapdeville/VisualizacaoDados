@@ -36,15 +36,18 @@ mod_dynamic_groups_server <- function(id, min, max, step, label = "") {
 
     output$sliders_fx <- renderUI({
       req(input$qntd_grupos)
-      purrr::pmap(
-        list(reac_aux()$sliders_it, reac_aux()$default_values),
-        ~ sliderInput(
-          inputId = ns(paste("fx", ..1, sep = "")),
-          label = ifelse(..1 == 1, label, ""),
-          min = min, max = max, step = .1,
-          value = ..2,
-          width = "90%"
-        )
+      tagList(
+        purrr::pmap(
+          list(reac_aux()$sliders_it, reac_aux()$default_values),
+          ~ sliderInput(
+            inputId = ns(paste("fx", ..1, sep = "")),
+            label = ifelse(..1 == 1, label, ""),
+            min = min, max = max, step = .1,
+            value = ..2,
+            width = "90%"
+          )
+        ),
+        actionButton(ns("confirmar"), label = "Salvar")
       )
     })
 
@@ -71,7 +74,15 @@ mod_dynamic_groups_server <- function(id, min, max, step, label = "") {
         ~ update_sliders(i = .x, input = input, i_max = max(reac_aux()$sliders_it))
       )
     })
-    return(input)
+
+    return(
+      eventReactive(input$confirmar, {
+        # Tomar cuidado aqui. Se o botao de confirmar for criado antes dos sliders, isso vai comecar
+        # sem ser executado
+        names_export = sort(names(input)[startsWith(names(input), "fx")])[seq(input$qntd_grupos)]
+        list(export = purrr::map(names_export, ~`[[`(input, .x)))
+      },ignoreNULL = F, ignoreInit = T)
+    )
   })
 }
 

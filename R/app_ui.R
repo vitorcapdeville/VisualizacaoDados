@@ -46,16 +46,20 @@ app_ui <- function(request) {
       ),
       shinydashboard::tabItem(
         tabName = "tabelas_detalhe",
-        do.call(
-          shinydashboard::tabBox,
-          c(
-            list(title = "", id = "tabset1", width = 12, height = "600px"),
-            purrr::map2(
-              colunasTabela, colunasTabelaNome,
-              ~mod_create_table_ui(id = .x, nome = .y)
-            )
-          )
+        purrr::map(
+          colunasTabela,
+          ~mod_create_table_ui(id = .x)
         )
+        # do.call(
+        #   shinydashboard::tabBox,
+        #   c(
+        #     list(title = "", id = "tabset1", width = 12, height = "600px"),
+        #     purrr::map2(
+        #       colunasTabela, colunasTabelaNome,
+        #       ~mod_create_table_ui(id = .x, nome = .y)
+        #     )
+        #   )
+        # )
       ),
       shinydashboard::tabItem(
         tabName = "graficos_detalhe",
@@ -80,7 +84,7 @@ app_ui <- function(request) {
       id = "controlbarmenu",
       shinydashboardPlus::controlbarItem(
         "Filtros",
-        mod_saved_choices_ui(id = "filtros", id_inputs = colunasFiltro, label = colunasFiltroNome, ncols = 1, choices = defaultValues, tipo = colunasFiltroTipo, step = 1)
+        mod_saved_choices_ui(id = "filtros", id_inputs = colunasFiltro, label = colunasFiltroNome, ncols = 1, choices = defaultValues, tipo = colunasFiltroTipo, step = 1, input_list = NULL)
       )
     )
   )

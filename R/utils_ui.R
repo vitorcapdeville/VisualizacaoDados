@@ -7,15 +7,23 @@
 #' @param tipo tipo de input.
 #' @param choices valores possiveis do input.
 #' @param step step do slider input. See `?shiny::sliderInput`
+#' @param input_list forma alternativa de especificar os filtros.
 #'
 #' @return lista contendo os inputs
 #'
 #' @noRd
-cria_filtros <- function(id, label, tipo, choices, step = 1) {
-  purrr::pmap(
-    list(id, label, tipo, choices, step),
-    ~genericInput(id = ..1, label = ..2, tipo = ..3, choices = ..4, step = ..5)
-  )
+cria_filtros <- function(id, label, tipo, choices, step = 1, input_list = NULL) {
+  if(!is.null(input_list)){
+    return(input_list)
+  } else {
+    return(
+      purrr::pmap(
+        list(id, label, tipo, choices, step),
+        ~genericInput(id = ..1, label = ..2, tipo = ..3, choices = ..4, step = ..5)
+      )
+    )
+  }
+
 }
 
 #' filtrosEstrutura
