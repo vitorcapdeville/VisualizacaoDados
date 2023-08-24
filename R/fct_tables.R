@@ -37,11 +37,14 @@ subquery_padrao <- function(con, group, value1, name1, table1, filtro) {
   group1 <- purrr::map(group, ~ DBI::Id(table = table1, column = .x))
   if (length(group1) == 1) group1 <- group1[[1]]
   sumarizacao1 <- sum_as(value1, name1, con)
+  select_group = ifelse(is.null(group), "'' as id,", "{`group1`*},")
+  agrupar = ifelse(is.null(group), "", "group by {`group1`*}")
   subquery1 <- glue::glue_sql(
-    "select {`group1`*},", sumarizacao1, "\n",
+    "select ", select_group,
+    sumarizacao1, "\n",
     "from {`table1`}\n",
     filtro, "\n",
-    "group by {`group1`*}",
+    agrupar,
     .con = con
   )
 

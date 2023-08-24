@@ -74,7 +74,7 @@ app_ui <- function(request) {
       ),
       shinydashboard::tabItem(
         tabName = "custom",
-        shinyWidgets::pickerInput("group_by", "Agrupamento", choices = colunas_all_group, selected = NULL, multiple = T),
+        shinyWidgets::pickerInput("group_by", "Agrupamento", choices = colunas_all_group, selected = colunas_all_group[1], multiple = T),
         mod_create_table_ui(id = "custom_table")
       )
 
