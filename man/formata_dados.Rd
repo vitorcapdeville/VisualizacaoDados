@@ -6,35 +6,31 @@
 \usage{
 formata_dados(
   con,
-  tabela1,
-  tabela2,
   nometabela1,
   nometabela2,
   colunas_exploratorias,
   colunas_valor1,
-  colunas_valor2,
-  overwrite = F
+  colunas_valor2
 )
 }
 \arguments{
 \item{con}{uma conexao com o SQL criada por `DBI::dbConnect`.}
 
-\item{tabela1, tabela2}{data.frame ou data.tables com os dados.}
-
-\item{nometabela1, nometabela2}{nome das tabelas a serem criadas no SQL.}
+\item{nometabela1, nometabela2}{nome das tabelas onde estão os dados.}
 
 \item{colunas_exploratorias}{nome das colunas a serem usadas como filtro e/ou como tabela.}
 
 \item{colunas_valor1, colunas_valor2}{colunas com os valores a serem exibidos nas tabelas, provinientes
 de cada uma das tabelas (1 e 2)}
-
-\item{overwrite}{T ou F, ira sobrescrever as tabelas existentes se T e ira retornar erro se ja existirem
-tabelas com os nomes fornecidos se F.}
 }
 \value{
 nao retorna nada, apenas cria as tabelas na conexao.
 }
 \description{
-Funcao para auxiliar na formatacao necessaria para o app. Recebe dois data.frames, ou data.tables,
-uma conexao com o SQL e as definicoes iguais aquelas que vao para o app e cria as tabelas e indices necessarios.
+Funcao para auxiliar na formatacao necessaria para o app. Garante que as colunas
+exploratórias existem nas duas tabelas e cria tabelas com as combinações únicas dessas colunas
+para auxiliar nos inputs. Após isso, cria indexes em todas as tabelas para acelerar as queries.
+
+Importante: as tabelas com nome {coluna_exploratoria}Id serão criadas no banco de dados, e se ja
+existirem, serão dropadas.
 }
