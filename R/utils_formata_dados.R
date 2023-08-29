@@ -46,11 +46,11 @@ formata_dados <- function(con, nometabela1, nometabela2, colunas_exploratorias, 
 
 criar_tabelas_id <- function(nometabela1, nometabela2, col, con) {
 
-  nome_tabela_id = glue::glue("dbo.{col}Id")
+  nome_tabela_id = glue::glue("{col}Id")
   query_delete = glue::glue_sql(
     "
-    IF OBJECT_ID('{`nome_tabela_id`}') IS NOT NULL
-    DROP TABLE {`nome_tabela_id`};
+    IF OBJECT_ID('dbo.{`nome_tabela_id`}') IS NOT NULL
+    DROP TABLE dbo.{`nome_tabela_id`};
     ",
     .con = con
   )
@@ -58,7 +58,7 @@ criar_tabelas_id <- function(nometabela1, nometabela2, col, con) {
   query_create = glue::glue_sql(
     "
     select
-      {`col`} into {`nome_tabela_id`}
+      {`col`} into dbo.{`nome_tabela_id`}
     from (
       select {`col`} from {`nometabela1`}
       union
