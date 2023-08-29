@@ -1,7 +1,7 @@
 Package: VisualizacaoDados
 Title: Funções para modularizar e organizar a visualização de dados via
     Shiny
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person("Vitor", "Capdeville", , "vgcapdeville@hotmail.com", role = c("cre", "aut"))
 Description: Esse pacote fornece uma série de funções que criam um
