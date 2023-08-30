@@ -12,6 +12,7 @@ app_ui <- function(request) {
 
   sidebar <- shinydashboardPlus::dashboardSidebar(
     collapsed = TRUE,
+    minified = FALSE,
     shinydashboard::sidebarMenu(
       id = "sidebarMenu",
       shinydashboard::menuItem(
@@ -118,13 +119,13 @@ app_ui <- function(request) {
 golem_add_external_resources <- function() {
   add_resource_path(
     "www",
-    app_sys("app/www")
+    path_www
   )
 
   tags$head(
     favicon(),
     bundle_resources(
-      path = app_sys("app/www"),
+      path = path_www,
       app_title = configs$nome_pagina
     ),
     shinyjs::useShinyjs(),

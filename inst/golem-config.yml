@@ -3,6 +3,7 @@ default:
   golem_name: VisualizacaoDados
   golem_version: 0.0.0.9000
   app_prod: no
+  path_www: system.file("app/www", package = "VisualizacaoDados")
   # Conexao com o sql. Nao precisa ser via SQLite
   con: !expr DBI::dbConnect(RSQLite::SQLite(), system.file("penguins.sqlite", package = "VisualizacaoDados"))
   colunas_all_group: !expr c("Id","species", "island", "sex")
