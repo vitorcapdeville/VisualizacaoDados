@@ -6,6 +6,8 @@
 #'
 #' @noRd
 #'
+#' @export
+#'
 #' @importFrom shiny NS tagList
 mod_dynamic_groups_ui <- function(id) {
   ns <- NS(id)
@@ -18,6 +20,8 @@ mod_dynamic_groups_ui <- function(id) {
 #' dynamic_groups Server Functions
 #'
 #' @param faixas lista com as faixas selecionadas
+#'
+#' @export
 #'
 #' @noRd
 mod_dynamic_groups_server <- function(id, min, max, step, label = "") {

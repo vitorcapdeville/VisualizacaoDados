@@ -25,6 +25,8 @@
 #'
 #' @noRd
 #'
+#' @export
+#'
 #' @importFrom shiny NS tagList
 mod_create_table_ui <- function(id, nome) {
   ns <- NS(id)
@@ -43,6 +45,8 @@ mod_create_table_ui <- function(id, nome) {
   # )
 }
 #' create_table Server Functions
+#'
+#' @export
 #'
 #' @noRd
 mod_create_table_server <- function(id, group, value1, value2, name1, name2, formats1, formats2, table1, table2, colunas_transformadas, colunas_transformadas_nome,

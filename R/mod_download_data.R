@@ -6,6 +6,8 @@
 #'
 #' @noRd
 #'
+#' @export
+#'
 #' @importFrom shiny NS tagList
 mod_download_data_ui <- function(id){
   ns <- NS(id)
@@ -15,6 +17,8 @@ mod_download_data_ui <- function(id){
 }
 
 #' download_data Server Functions
+#'
+#' @export
 #'
 #' @noRd
 mod_download_data_server <- function(id, group, preTable, filtro){

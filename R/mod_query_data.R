@@ -1,5 +1,7 @@
 #' query_data Server Functions
 #'
+#' @export
+#'
 #' @noRd
 mod_query_data_server <- function(id, con, group, value1, name1, table1, value2, name2, table2, filtro, colunas_transformadas, colunas_transformadas_nome, cuts = NULL){
   moduleServer( id, function(input, output, session){

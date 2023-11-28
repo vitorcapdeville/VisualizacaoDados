@@ -13,6 +13,8 @@
 #'
 #' @noRd
 #'
+#' @export
+#'
 #' @importFrom shiny NS tagList
 mod_saved_choices_ui <- function(id, id_inputs, label, ncols, choices, tipo, step = 1, input_list = NULL){
   ns <- NS(id)
@@ -36,6 +38,8 @@ mod_saved_choices_ui <- function(id, id_inputs, label, ncols, choices, tipo, ste
 #' saved_choices Server Functions
 #'
 #' @param saved_choices escolhas salvas pelo usuario. deve ser criado com reactiveValues
+#'
+#' @export
 #'
 #' @noRd
 mod_saved_choices_server <- function(id, saved_choices, id_inputs, choices, tipo){
