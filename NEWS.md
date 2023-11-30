@@ -1,3 +1,5 @@
+# VisualizacaoDados 0.0.7
+
 # VisualizacaoDados 0.0.6
 
 # VisualizacaoDados 0.0.5
