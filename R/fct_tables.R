@@ -96,6 +96,8 @@ query_padrao <- function(con, group, value1, name1, table1, value2, name2, table
 #' @param align posicao para alinhar o datatable
 #' @param footer T ou F
 #'
+#' @export
+#'
 #' @noRd
 createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px", "200px"),
                      align = "left", footer = T, pageLength = 10) {
