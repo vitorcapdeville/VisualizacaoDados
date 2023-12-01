@@ -111,7 +111,7 @@ createDT <- function(data, fixed = 1, cols, formats, widths = c("400px", "200px"
   tipo[which(!names(data) %in% cols)] <- "-"
   tipo[1] <- "Total"
   DT::datatable(data,
-    container = sketch(data, tipo, align = "left"),
+    container = sketch(data, tipo, align = align),
     rownames = F,
     extensions = c("FixedColumns"),
     filter = "top",
